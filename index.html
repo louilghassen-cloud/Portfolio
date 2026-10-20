@@ -426,8 +426,8 @@ document.addEventListener('DOMContentLoaded', async function() {
       frameContainer.style.cssText = 'aspect-ratio: 16 / 9; overflow: hidden; border-radius: 10px; background: #1E1E21';
 
       const frame = doc.createElement('iframe');
-      frame.src = 'https://drive.google.com/embeddedfolderview?id=1PhUMPBmZvAt63bMPgJfVoEkEth2NHmL7#grid';
-      frame.title = 'SHOWREEL 2026 Google Drive folder';
+      frame.src = 'https://drive.google.com/file/d/14pJZkiX1hYEqe9BJP63QP1SzeHCfoq48/preview';
+      frame.title = 'SHOWREEL 2026 video';
       frame.allow = 'autoplay; encrypted-media; picture-in-picture';
       frame.allowFullscreen = true;
       frame.loading = 'lazy';
@@ -435,7 +435,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       frameContainer.appendChild(frame);
 
       const fallbackLink = doc.createElement('a');
-      fallbackLink.href = 'https://drive.google.com/drive/u/0/folders/1PhUMPBmZvAt63bMPgJfVoEkEth2NHmL7';
+      fallbackLink.href = 'https://drive.google.com/file/d/14pJZkiX1hYEqe9BJP63QP1SzeHCfoq48/view';
       fallbackLink.target = '_blank';
       fallbackLink.rel = 'noopener noreferrer';
       fallbackLink.textContent = 'Open showreel in Google Drive';
