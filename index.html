@@ -523,7 +523,23 @@ document.addEventListener('DOMContentLoaded', async function() {
       `;
       document.head.append(style);
 
+      let restorePlaylists;
+      let suppressPlaylistRender = false;
+      document.addEventListener('click', (event) => {
+        const target = event.target;
+        if (target instanceof Element && target.closest('.playlist-card, .playlist-carousel-controls')) return;
+        if (restorePlaylists) {
+          suppressPlaylistRender = true;
+          restorePlaylists();
+          setTimeout(() => {
+            suppressPlaylistRender = false;
+            renderPlaylists();
+          }, 0);
+        }
+      }, true);
+
       const renderPlaylists = () => {
+        if (suppressPlaylistRender) return;
         const section = Array.from(document.querySelectorAll('.work-section')).find((item) => {
           const title = item.querySelector('.work-section-heading h2');
           return title && /shortform|s.ries courtes/i.test(title.textContent || '');
@@ -532,13 +548,27 @@ document.addEventListener('DOMContentLoaded', async function() {
         const projects = section.querySelector('.projects');
         if (!projects || projects.querySelector('.playlist-card')) return;
 
-        projects.classList.add('playlist-grid');
-        projects.replaceChildren();
+        const originalChildren = Array.from(projects.childNodes);
+        const hadPlaylistGridClass = projects.classList.contains('playlist-grid');
         const count = section.querySelector('.work-count');
-        if (count) count.textContent = `(${String(playlists.length).padStart(2, '0')})`;
-
+        const originalCount = count && count.textContent;
+        const sectionHead = section.querySelector('.work-section-head');
+        projects.classList.add('playlist-grid');
         const carouselControls = document.createElement('div');
         carouselControls.className = 'playlist-carousel-controls';
+        const restore = () => {
+          if (restorePlaylists !== restore) return;
+          restorePlaylists = null;
+          projects.replaceChildren(...originalChildren);
+          if (!hadPlaylistGridClass) projects.classList.remove('playlist-grid');
+          carouselControls.remove();
+          if (count) count.textContent = originalCount;
+        };
+        restorePlaylists = restore;
+
+        projects.replaceChildren();
+        if (count) count.textContent = `(${String(playlists.length).padStart(2, '0')})`;
+
         const previousPlaylist = document.createElement('button');
         previousPlaylist.className = 'playlist-nav';
         previousPlaylist.type = 'button';
@@ -550,7 +580,6 @@ document.addEventListener('DOMContentLoaded', async function() {
         nextPlaylist.setAttribute('aria-label', 'Next playlist');
         nextPlaylist.textContent = '→';
         carouselControls.append(previousPlaylist, nextPlaylist);
-        const sectionHead = section.querySelector('.work-section-head');
         if (sectionHead && !sectionHead.querySelector('.playlist-carousel-controls')) sectionHead.append(carouselControls);
 
         const updateCarouselControls = () => {
