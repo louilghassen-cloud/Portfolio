@@ -682,7 +682,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             frame.src = `https://drive.google.com/file/d/${video.videoId}/preview`;
             frame.title = `${video.title} - ${video.info}`;
             frame.loading = 'lazy';
-            frame.allow = 'autoplay; encrypted-media; fullscreen; picture-in-picture';
+            frame.allow = 'autoplay; encrypted-media; picture-in-picture';
             frame.style.cssText = 'position: absolute; inset: 0; width: 100%; height: 100%; border: 0;';
             cover.append(frame, label);
             const details = document.createElement('div');
@@ -882,6 +882,477 @@ document.addEventListener('DOMContentLoaded', async function() {
       const playlistObserver = new MutationObserver(schedulePlaylistRender);
       playlistObserver.observe(document.documentElement, { childList: true, subtree: true });
       schedulePlaylistRender();
+    }
+    {
+      const carouselSlides = [
+        { src: 'assets/wecom-co/carousel-01.png', alt: 'Wecom&Co Instagram carousel slide 1' },
+        { src: 'assets/wecom-co/carousel-02.png', alt: 'Wecom&Co Instagram carousel slide 2' },
+        { src: 'assets/wecom-co/carousel-03.png', alt: 'Wecom&Co Instagram carousel slide 3' },
+        { src: 'assets/wecom-co/carousel-04.png', alt: 'Wecom&Co Instagram carousel slide 4' },
+        { src: 'assets/wecom-co/carousel-05.png', alt: 'Wecom&Co Instagram carousel slide 5' }
+      ];
+      const campaignAssets = [
+        { title: 'Premiere impression', src: 'assets/wecom-co/premiere-impression.png', alt: 'Premiere impression campaign visual', type: 'Graphic' },
+        { title: 'Impots', src: 'assets/wecom-co/impots.png', alt: 'Impots campaign visual', type: 'Graphic' },
+        { title: 'Instagramvers', src: 'assets/wecom-co/instagramvers.png', alt: 'Instagramvers campaign visual', type: 'Graphic' },
+        { title: 'GIF Insta', driveId: '17pt2nKjHCccOHkpQ-tngSlvxNqV4WpcC', alt: 'GIF Insta motion post', type: 'Video' },
+        { title: 'Story example', src: 'assets/wecom-co/story-example.png', alt: 'Instagram story example', type: 'Story' },
+        { title: 'Chien', src: 'assets/wecom-co/chien.png', alt: 'Chien campaign visual', type: 'Graphic' },
+        { title: 'Recruitement 01', src: 'assets/wecom-co/recruitement-1.png', alt: 'Recruitement campaign visual 1', type: 'Story' },
+        { title: 'Recruitement 02', src: 'assets/wecom-co/recruitement-2.png', alt: 'Recruitement campaign visual 2', type: 'Story' }
+      ];
+      const galleryStyle = document.createElement('style');
+      galleryStyle.textContent = `
+        .wecom-folder-project {
+          grid-column: 1 / -1 !important;
+          display: grid !important;
+          grid-template-columns: minmax(0, .92fr) minmax(0, 1.08fr);
+          gap: clamp(24px, 5vw, 72px);
+          align-items: center;
+          min-height: 340px;
+          margin-top: 12px;
+          padding: clamp(24px, 5vw, 54px);
+          overflow: hidden;
+          border: 1px solid rgba(245,245,240,.12);
+          border-radius: 22px;
+          background: radial-gradient(ellipse at 82% 16%, rgba(198,244,50,.12), transparent 35%), linear-gradient(135deg, #19191b, #101012 70%);
+          box-shadow: 0 24px 70px rgba(0,0,0,.2);
+          cursor: default;
+        }
+        .wecom-folder-project:hover { outline: 1px solid rgba(198,244,50,.42); }
+        .wecom-folder-copy { min-width: 0; }
+        .wecom-folder-kicker { display: flex; align-items: center; gap: 9px; margin-bottom: 20px; color: #b7b7b1; font-size: .68rem; font-weight: 650; letter-spacing: .16em; text-transform: uppercase; }
+        .wecom-folder-kicker::before { width: 7px; height: 7px; border-radius: 50%; background: #C6F432; box-shadow: 0 0 14px rgba(198,244,50,.55); content: ''; }
+        .wecom-folder-copy h3 { margin: 0 0 12px; color: #F5F5F0; font-size: clamp(2.2rem, 5vw, 4.2rem); font-weight: 760; letter-spacing: -.07em; line-height: .96; }
+        .wecom-folder-copy p { max-width: 420px; margin: 0; color: #a4a4a0; font-size: .95rem; line-height: 1.7; }
+        .wecom-folder-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 15px; margin-top: 27px; }
+        .wecom-folder-open { display: inline-flex; min-height: 46px; align-items: center; justify-content: center; gap: 11px; padding: 0 18px; border: 0; border-radius: 999px; background: #C6F432; color: #0B0B0C; font: inherit; font-size: .82rem; font-weight: 700; cursor: pointer; transition: transform .18s ease, box-shadow .18s ease; }
+        .wecom-folder-open:hover { transform: translateY(-2px); box-shadow: 0 8px 26px rgba(198,244,50,.2); }
+        .wecom-folder-open:focus-visible, .wecom-dialog button:focus-visible, .wecom-dialog a:focus-visible { outline: 2px solid #C6F432; outline-offset: 3px; }
+        .wecom-folder-total { color: #92928d; font-size: .76rem; }
+        .wecom-folder-preview { position: relative; display: grid; min-height: 260px; place-items: center; overflow: hidden; border: 1px solid rgba(245,245,240,.08); border-radius: 18px; background: radial-gradient(ellipse at center, rgba(198,244,50,.08), transparent 62%), #121214; }
+        .wecom-folder-tab { position: absolute; top: 16px; right: 18px; z-index: 4; padding: 7px 10px; border: 1px solid rgba(245,245,240,.12); border-radius: 999px; background: rgba(15,15,16,.72); color: #c9c9c3; font-size: .61rem; font-weight: 650; letter-spacing: .12em; text-transform: uppercase; }
+        .wecom-folder-stack { position: relative; width: min(74%, 365px); height: 205px; }
+        .wecom-folder-stack img { position: absolute; top: 6px; width: 38%; height: 188px; border: 4px solid #f4f1e9; border-radius: 8px; background: #222; object-fit: cover; box-shadow: 0 15px 40px rgba(0,0,0,.42); transition: transform .25s ease; }
+        .wecom-folder-stack img:nth-child(1) { left: 8%; transform: rotate(-12deg) translateY(8px); }
+        .wecom-folder-stack img:nth-child(2) { left: 30%; z-index: 2; transform: rotate(1deg) translateY(-3px); }
+        .wecom-folder-stack img:nth-child(3) { right: 7%; transform: rotate(12deg) translateY(7px); }
+        .wecom-folder-project:hover .wecom-folder-stack img:nth-child(1) { transform: rotate(-16deg) translate(-5px, 4px); }
+        .wecom-folder-project:hover .wecom-folder-stack img:nth-child(2) { transform: rotate(0) translateY(-9px); }
+        .wecom-folder-project:hover .wecom-folder-stack img:nth-child(3) { transform: rotate(16deg) translate(5px, 4px); }
+        .wecom-dialog { width: min(1080px, calc(100vw - 28px)); max-width: none; max-height: min(90vh, 1050px); padding: 0; overflow: auto; border: 1px solid rgba(245,245,240,.13); border-radius: 20px; background: #111113; color: #F5F5F0; font-family: Archivo, sans-serif; box-shadow: 0 28px 100px rgba(0,0,0,.62); }
+        .wecom-dialog::backdrop { background: rgba(4,4,5,.82); backdrop-filter: blur(9px); }
+        .wecom-dialog-shell { padding: clamp(20px, 4vw, 38px); }
+        .wecom-dialog-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; padding-bottom: 23px; border-bottom: 1px solid rgba(245,245,240,.1); }
+        .wecom-dialog-kicker { margin: 0 0 8px; color: #C6F432; font-size: .64rem; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; }
+        .wecom-dialog-header h2 { margin: 0; font-size: clamp(1.7rem, 4vw, 2.5rem); letter-spacing: -.055em; }
+        .wecom-dialog-subtitle { margin: 7px 0 0; color: #999994; font-size: .83rem; }
+        .wecom-dialog button { font-family: inherit; }
+        .wecom-dialog-close { display: grid; width: 40px; height: 40px; flex: 0 0 auto; place-items: center; border: 1px solid rgba(245,245,240,.14); border-radius: 50%; background: rgba(245,245,240,.04); color: #F5F5F0; font-size: 1.45rem; line-height: 1; cursor: pointer; }
+        .wecom-dialog-close:hover { border-color: #C6F432; color: #C6F432; }
+        .wecom-gallery-body { display: grid; gap: 34px; padding-top: 25px; }
+        .wecom-panel-heading, .wecom-assets-heading { display: flex; align-items: end; justify-content: space-between; gap: 16px; margin-bottom: 14px; }
+        .wecom-panel-heading h3, .wecom-assets-heading h3 { margin: 0; font-size: 1rem; letter-spacing: -.025em; }
+        .wecom-panel-heading p { margin: 4px 0 0; color: #8e8e89; font-size: .75rem; }
+        .wecom-carousel-panel { padding: clamp(14px, 3vw, 24px); border: 1px solid rgba(245,245,240,.09); border-radius: 16px; background: #171719; }
+        .wecom-drive-link { color: #b5b5af; font-size: .72rem; text-decoration-color: rgba(198,244,50,.6); text-underline-offset: 4px; white-space: nowrap; }
+        .wecom-drive-link:hover { color: #C6F432; }
+        .wecom-carousel-stage { position: relative; display: grid; min-height: 280px; place-items: center; overflow: hidden; border-radius: 12px; background: #09090a; touch-action: pan-y; }
+        .wecom-carousel-image { display: block; width: 100%; max-height: 530px; aspect-ratio: 4 / 3; object-fit: contain; user-select: none; -webkit-user-drag: none; }
+        .wecom-carousel-nav { position: absolute; top: 50%; display: grid; width: 42px; height: 42px; place-items: center; transform: translateY(-50%); border: 1px solid rgba(255,255,255,.2); border-radius: 50%; background: rgba(8,8,9,.72); color: #fff; font-size: 1.4rem; cursor: pointer; transition: background .18s ease, color .18s ease; }
+        .wecom-carousel-nav:hover:not(:disabled) { background: #C6F432; color: #0B0B0C; }
+        .wecom-carousel-nav:disabled { opacity: .35; cursor: not-allowed; }
+        .wecom-carousel-prev { left: 13px; }
+        .wecom-carousel-next { right: 13px; }
+        .wecom-carousel-footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-top: 15px; }
+        .wecom-carousel-dots { display: flex; align-items: center; gap: 7px; }
+        .wecom-carousel-dot { width: 7px; height: 7px; padding: 0; border: 0; border-radius: 50%; background: #57575a; cursor: pointer; transition: width .18s ease, background .18s ease; }
+        .wecom-carousel-dot[aria-pressed="true"] { width: 20px; border-radius: 999px; background: #C6F432; }
+        .wecom-carousel-count { color: #a1a19b; font-size: .7rem; font-variant-numeric: tabular-nums; }
+        .wecom-assets-heading { margin-bottom: 13px; }
+        .wecom-assets-heading span { color: #898984; font-size: .72rem; }
+        .wecom-assets-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+        .wecom-asset-tile { min-width: 0; overflow: hidden; border: 1px solid rgba(245,245,240,.1); border-radius: 12px; background: #18181a; }
+        .wecom-asset-tile:hover { border-color: rgba(198,244,50,.4); }
+        .wecom-asset-visual { display: grid; min-height: 170px; aspect-ratio: 4 / 3; place-items: center; overflow: hidden; background: #09090a; }
+        .wecom-asset-visual img, .wecom-asset-visual video, .wecom-asset-visual iframe { display: block; width: 100%; height: 100%; max-height: 245px; border: 0; object-fit: contain; }
+        .wecom-asset-visual iframe { min-height: 170px; background: #000; }
+        .wecom-asset-visual img[role="button"] { cursor: zoom-in; }
+        .wecom-asset-visual img[role="button"]:focus-visible, .wecom-asset-view:focus-visible { outline: 2px solid #C6F432; outline-offset: -3px; }
+        .wecom-asset-caption { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 10px 11px; }
+        .wecom-asset-caption strong { overflow: hidden; color: #e8e8e2; font-size: .73rem; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+        .wecom-asset-caption span { flex: 0 0 auto; color: #90908a; font-size: .6rem; text-transform: uppercase; }
+        .wecom-asset-view { display: inline-flex; align-items: center; gap: 5px; padding: 0; border: 0; background: none; color: #C6F432; font: inherit; font-size: .64rem; font-weight: 650; white-space: nowrap; cursor: pointer; }
+        .wecom-post-viewer[hidden] { display: none; }
+        .wecom-post-viewer { padding-top: 25px; }
+        .wecom-post-viewer-top { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 16px; }
+        .wecom-back-folder { display: inline-flex; align-items: center; gap: 8px; padding: 0; border: 0; background: none; color: #b6b6b0; font: inherit; font-size: .78rem; cursor: pointer; }
+        .wecom-back-folder:hover { color: #C6F432; }
+        .wecom-post-viewer-title { margin: 0; color: #F5F5F0; font-size: 1rem; text-align: right; }
+        .wecom-post-stage { position: relative; display: grid; min-height: 340px; place-items: center; overflow: hidden; border: 1px solid rgba(245,245,240,.08); border-radius: 14px; background: #080809; touch-action: pan-y; }
+        .wecom-post-media { display: grid; width: 100%; min-height: 340px; place-items: center; }
+        .wecom-post-media img, .wecom-post-media iframe { display: block; width: 100%; height: min(66vh, 690px); min-height: 340px; border: 0; object-fit: contain; }
+        .wecom-post-nav { z-index: 1; }
+        .wecom-post-footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-top: 16px; }
+        .wecom-open-drive { color: #b5b5af; font-size: .72rem; text-decoration-color: rgba(198,244,50,.6); text-underline-offset: 4px; }
+        .wecom-open-drive:hover { color: #C6F432; }
+        @media (max-width: 760px) {
+          .wecom-folder-project { grid-template-columns: minmax(0, 1fr); gap: 25px; }
+          .wecom-folder-copy h3 { font-size: clamp(2.5rem, 12vw, 4rem); }
+          .wecom-folder-preview { min-height: 225px; }
+          .wecom-assets-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+        @media (max-width: 480px) {
+          .wecom-folder-project { padding: 22px; border-radius: 16px; }
+          .wecom-folder-stack { width: 82%; height: 175px; }
+          .wecom-folder-stack img { height: 160px; }
+          .wecom-dialog { width: calc(100vw - 16px); max-height: 94vh; border-radius: 14px; }
+          .wecom-dialog-shell { padding: 18px 14px; }
+          .wecom-panel-heading, .wecom-assets-heading { align-items: flex-start; }
+          .wecom-drive-link { max-width: 104px; text-align: right; white-space: normal; }
+          .wecom-carousel-stage { min-height: 220px; }
+          .wecom-assets-grid { gap: 8px; }
+          .wecom-asset-visual { min-height: 125px; }
+          .wecom-asset-caption { align-items: flex-start; flex-direction: column; gap: 4px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .wecom-folder-open, .wecom-folder-stack img, .wecom-carousel-nav, .wecom-carousel-dot { transition: none; }
+        }
+      `;
+      document.head.append(galleryStyle);
+
+      const dialog = document.createElement('dialog');
+      dialog.className = 'wecom-dialog';
+      dialog.setAttribute('aria-labelledby', 'wecom-gallery-title');
+      const shell = document.createElement('div');
+      shell.className = 'wecom-dialog-shell';
+      shell.innerHTML = `
+        <header class="wecom-dialog-header">
+          <div>
+            <p class="wecom-dialog-kicker">Client folder · Social &amp; campaign design</p>
+            <h2 id="wecom-gallery-title">wecom&amp;co</h2>
+            <p class="wecom-dialog-subtitle">A collection of social visuals, stories and motion.</p>
+          </div>
+          <button class="wecom-dialog-close" type="button" aria-label="Close wecom&co folder">×</button>
+        </header>
+        <div class="wecom-gallery-body">
+          <section class="wecom-carousel-panel" aria-label="Instagram carousel">
+            <div class="wecom-panel-heading">
+              <div><h3>Instagram carousel</h3><p>Swipe through the five-slide post</p></div>
+              <a class="wecom-drive-link" href="https://drive.google.com/drive/folders/16nI4aFm85KGjhb9zOd5XA8xbKyC2SacF?usp=drive_link" target="_blank" rel="noopener noreferrer">Original folder ↗</a>
+            </div>
+            <div class="wecom-carousel-stage">
+              <button class="wecom-carousel-nav wecom-carousel-prev" type="button" aria-label="Previous carousel slide">‹</button>
+              <img class="wecom-carousel-image" alt="">
+              <button class="wecom-carousel-nav wecom-carousel-next" type="button" aria-label="Next carousel slide">›</button>
+            </div>
+            <div class="wecom-carousel-footer">
+              <div class="wecom-carousel-dots" aria-label="Choose carousel slide"></div>
+              <span class="wecom-carousel-count" aria-live="polite"></span>
+            </div>
+          </section>
+          <section aria-labelledby="wecom-assets-title">
+            <div class="wecom-assets-heading"><h3 id="wecom-assets-title">More from the folder</h3><span>08 pieces</span></div>
+            <div class="wecom-assets-grid"></div>
+          </section>
+        </div>`;
+      const postViewer = document.createElement('section');
+      postViewer.className = 'wecom-post-viewer';
+      postViewer.hidden = true;
+      postViewer.setAttribute('aria-label', 'Post viewer');
+      postViewer.innerHTML = `
+        <div class="wecom-post-viewer-top">
+          <button class="wecom-back-folder" type="button"><span aria-hidden="true">←</span> Back to folder</button>
+          <h3 class="wecom-post-viewer-title"></h3>
+        </div>
+        <div class="wecom-post-stage">
+          <button class="wecom-carousel-nav wecom-post-nav wecom-post-prev" type="button" aria-label="Previous post">‹</button>
+          <div class="wecom-post-media"></div>
+          <button class="wecom-carousel-nav wecom-post-nav wecom-post-next" type="button" aria-label="Next post">›</button>
+        </div>
+        <div class="wecom-post-footer">
+          <div class="wecom-carousel-dots" aria-label="Choose a post"></div>
+          <span class="wecom-carousel-count" aria-live="polite"></span>
+          <a class="wecom-open-drive" target="_blank" rel="noopener noreferrer" hidden>Open original ↗</a>
+        </div>`;
+      shell.append(postViewer);
+      dialog.append(shell);
+      document.body.append(dialog);
+      const galleryBody = dialog.querySelector('.wecom-gallery-body');
+
+      const slideImage = dialog.querySelector('.wecom-carousel-image');
+      const slideCount = dialog.querySelector('.wecom-carousel-count');
+      const previousSlide = dialog.querySelector('.wecom-carousel-prev');
+      const nextSlide = dialog.querySelector('.wecom-carousel-next');
+      const slideDots = dialog.querySelector('.wecom-carousel-dots');
+      const carouselStage = dialog.querySelector('.wecom-carousel-stage');
+      let activeSlide = 0;
+      let pointerStartX = null;
+      const renderSlide = () => {
+        const slide = carouselSlides[activeSlide];
+        slideImage.src = slide.src;
+        slideImage.alt = slide.alt;
+        slideCount.textContent = `${String(activeSlide + 1).padStart(2, '0')} / ${String(carouselSlides.length).padStart(2, '0')}`;
+        previousSlide.disabled = activeSlide === 0;
+        nextSlide.disabled = activeSlide === carouselSlides.length - 1;
+        Array.from(slideDots.children).forEach((dot, index) => {
+          dot.setAttribute('aria-pressed', index === activeSlide ? 'true' : 'false');
+        });
+      };
+      carouselSlides.forEach((slide, index) => {
+        const dot = document.createElement('button');
+        dot.className = 'wecom-carousel-dot';
+        dot.type = 'button';
+        dot.setAttribute('aria-label', `Show carousel slide ${index + 1}`);
+        dot.setAttribute('aria-pressed', 'false');
+        dot.addEventListener('click', () => {
+          activeSlide = index;
+          renderSlide();
+        });
+        slideDots.append(dot);
+      });
+      previousSlide.addEventListener('click', () => {
+        activeSlide = Math.max(0, activeSlide - 1);
+        renderSlide();
+      });
+      nextSlide.addEventListener('click', () => {
+        activeSlide = Math.min(carouselSlides.length - 1, activeSlide + 1);
+        renderSlide();
+      });
+      carouselStage.addEventListener('pointerdown', (event) => {
+        if (event.pointerType === 'mouse' || event.target.closest('button')) return;
+        pointerStartX = event.clientX;
+        carouselStage.setPointerCapture(event.pointerId);
+      });
+      carouselStage.addEventListener('pointerup', (event) => {
+        if (pointerStartX === null) return;
+        const distance = event.clientX - pointerStartX;
+        pointerStartX = null;
+        if (Math.abs(distance) < 40) return;
+        activeSlide = Math.max(0, Math.min(carouselSlides.length - 1, activeSlide + (distance < 0 ? 1 : -1)));
+        renderSlide();
+      });
+      carouselStage.addEventListener('pointercancel', () => { pointerStartX = null; });
+      renderSlide();
+
+      const assetsGrid = dialog.querySelector('.wecom-assets-grid');
+      const postTitle = postViewer.querySelector('.wecom-post-viewer-title');
+      const postMedia = postViewer.querySelector('.wecom-post-media');
+      const postCount = postViewer.querySelector('.wecom-post-footer .wecom-carousel-count');
+      const postDots = postViewer.querySelector('.wecom-post-footer .wecom-carousel-dots');
+      const previousPost = postViewer.querySelector('.wecom-post-prev');
+      const nextPost = postViewer.querySelector('.wecom-post-next');
+      const postStage = postViewer.querySelector('.wecom-post-stage');
+      const openDrive = postViewer.querySelector('.wecom-open-drive');
+      let activePost = 0;
+      let lastPostTrigger = null;
+      let postPointerStartX = null;
+      const renderPost = () => {
+        const asset = campaignAssets[activePost];
+        postTitle.textContent = asset.title;
+        postCount.textContent = `${String(activePost + 1).padStart(2, '0')} / ${String(campaignAssets.length).padStart(2, '0')}`;
+        previousPost.disabled = activePost === 0;
+        nextPost.disabled = activePost === campaignAssets.length - 1;
+        Array.from(postDots.children).forEach((dot, index) => {
+          dot.setAttribute('aria-pressed', index === activePost ? 'true' : 'false');
+        });
+        postMedia.replaceChildren();
+        if (asset.type === 'Video') {
+          const frame = document.createElement('iframe');
+          frame.src = `https://drive.google.com/file/d/${asset.driveId}/preview`;
+          frame.title = asset.alt;
+          frame.allow = 'autoplay; encrypted-media; fullscreen; picture-in-picture';
+          frame.allowFullscreen = true;
+          postMedia.append(frame);
+          openDrive.href = `https://drive.google.com/file/d/${asset.driveId}/view`;
+          openDrive.hidden = false;
+        } else {
+          const image = document.createElement('img');
+          image.src = asset.src;
+          image.alt = asset.alt;
+          postMedia.append(image);
+          openDrive.hidden = true;
+          openDrive.removeAttribute('href');
+        }
+      };
+      const showPost = (index, trigger) => {
+        activePost = Math.max(0, Math.min(index, campaignAssets.length - 1));
+        lastPostTrigger = trigger;
+        galleryBody.hidden = true;
+        postViewer.hidden = false;
+        renderPost();
+        postViewer.querySelector('.wecom-back-folder').focus();
+      };
+      const showFolderContents = (restoreFocus = true) => {
+        postMedia.replaceChildren();
+        openDrive.hidden = true;
+        postViewer.hidden = true;
+        galleryBody.hidden = false;
+        if (restoreFocus && lastPostTrigger && lastPostTrigger.isConnected) lastPostTrigger.focus();
+        lastPostTrigger = null;
+      };
+      campaignAssets.forEach((asset, index) => {
+        const dot = document.createElement('button');
+        dot.className = 'wecom-carousel-dot';
+        dot.type = 'button';
+        dot.setAttribute('aria-label', `Show ${asset.title}`);
+        dot.setAttribute('aria-pressed', 'false');
+        dot.addEventListener('click', () => {
+          activePost = index;
+          renderPost();
+        });
+        postDots.append(dot);
+      });
+      previousPost.addEventListener('click', () => {
+        activePost = Math.max(0, activePost - 1);
+        renderPost();
+      });
+      nextPost.addEventListener('click', () => {
+        activePost = Math.min(campaignAssets.length - 1, activePost + 1);
+        renderPost();
+      });
+      postViewer.querySelector('.wecom-back-folder').addEventListener('click', showFolderContents);
+      postStage.addEventListener('pointerdown', (event) => {
+        if (event.pointerType === 'mouse' || event.target.closest('button')) return;
+        postPointerStartX = event.clientX;
+        postStage.setPointerCapture(event.pointerId);
+      });
+      postStage.addEventListener('pointerup', (event) => {
+        if (postPointerStartX === null) return;
+        const distance = event.clientX - postPointerStartX;
+        postPointerStartX = null;
+        if (Math.abs(distance) < 40) return;
+        activePost = Math.max(0, Math.min(campaignAssets.length - 1, activePost + (distance < 0 ? 1 : -1)));
+        renderPost();
+      });
+      postStage.addEventListener('pointercancel', () => { postPointerStartX = null; });
+      postViewer.addEventListener('keydown', (event) => {
+        if (event.key === 'ArrowLeft') {
+          event.preventDefault();
+          previousPost.click();
+        } else if (event.key === 'ArrowRight') {
+          event.preventDefault();
+          nextPost.click();
+        }
+      });
+      dialog.addEventListener('keydown', (event) => {
+        if (event.key !== 'Escape') return;
+        event.preventDefault();
+        closeFolder();
+      });
+      campaignAssets.forEach((asset, index) => {
+        const tile = document.createElement('article');
+        tile.className = 'wecom-asset-tile';
+        const visual = document.createElement('div');
+        visual.className = 'wecom-asset-visual';
+        if (asset.type === 'Video') {
+          const frame = document.createElement('iframe');
+          frame.src = `https://drive.google.com/file/d/${asset.driveId}/preview`;
+          frame.title = asset.alt;
+          frame.loading = 'lazy';
+          frame.allow = 'autoplay; encrypted-media; fullscreen; picture-in-picture';
+          visual.append(frame);
+        } else {
+          const image = document.createElement('img');
+          image.src = asset.src;
+          image.alt = asset.alt;
+          image.loading = 'lazy';
+          image.decoding = 'async';
+          image.tabIndex = 0;
+          image.setAttribute('role', 'button');
+          image.setAttribute('aria-label', `Open ${asset.title}`);
+          image.addEventListener('click', () => showPost(index, image));
+          image.addEventListener('keydown', (event) => {
+            if (event.key !== 'Enter' && event.key !== ' ') return;
+            event.preventDefault();
+            showPost(index, image);
+          });
+          visual.append(image);
+        }
+        const caption = document.createElement('div');
+        caption.className = 'wecom-asset-caption';
+        const title = document.createElement('strong');
+        title.textContent = asset.title;
+        const type = document.createElement('span');
+        type.textContent = asset.type;
+        const view = document.createElement('button');
+        view.className = 'wecom-asset-view';
+        view.type = 'button';
+        view.setAttribute('aria-label', `Open ${asset.title}`);
+        view.textContent = 'View ↗';
+        view.addEventListener('click', () => showPost(index, view));
+        caption.append(title, type, view);
+        tile.append(visual, caption);
+        assetsGrid.append(tile);
+      });
+
+      const openFolder = () => {
+        if (!dialog.open) dialog.showModal();
+      };
+      const closeFolder = () => {
+        showFolderContents(false);
+        if (dialog.open) dialog.close();
+      };
+      dialog.querySelector('.wecom-dialog-close').addEventListener('click', closeFolder);
+      dialog.addEventListener('click', (event) => {
+        if (event.target === dialog) closeFolder();
+      });
+
+      const mountWecomFolder = () => {
+        const postsSection = Array.from(document.querySelectorAll('#work .work-section')).find((section) => {
+          const title = section.querySelector('.work-section-head h2')?.textContent || '';
+          return /posts|publications/i.test(title);
+        });
+        const projects = postsSection && postsSection.querySelector('.projects');
+        const existingFolders = document.querySelectorAll('#work .wecom-folder-project');
+        existingFolders.forEach((folder) => {
+          if (!projects || folder.parentElement !== projects) folder.remove();
+        });
+        if (!projects) return;
+
+        const placeholders = new Set(['Culture Drop', 'Summer Sessions', 'Launch Day', 'Today / Tomorrow']);
+        projects.querySelectorAll('.project').forEach((project) => {
+          const title = project.querySelector('.project-details h3')?.textContent.trim();
+          if (placeholders.has(title)) project.remove();
+        });
+
+        const updatePostsCount = () => {
+          const count = postsSection.querySelector('.work-count');
+          const value = `(${String(projects.querySelectorAll('.project').length).padStart(2, '0')})`;
+          if (count && count.textContent !== value) count.textContent = value;
+        };
+        if (projects.querySelector('.wecom-folder-project')) {
+          updatePostsCount();
+          return;
+        }
+
+        const folder = document.createElement('article');
+        folder.className = 'project wecom-folder-project';
+        folder.innerHTML = `
+          <div class="wecom-folder-copy">
+            <div class="wecom-folder-kicker">A social design collection</div>
+            <h3>wecom&amp;co</h3>
+            <p>Campaign visuals, Instagram stories and motion, gathered together in one place.</p>
+            <div class="wecom-folder-actions">
+              <button class="wecom-folder-open" type="button">Open folder <span aria-hidden="true">↗</span></button>
+              <span class="wecom-folder-total">13 pieces · 5-slide carousel · 1 video</span>
+            </div>
+          </div>
+          <div class="wecom-folder-preview" aria-hidden="true">
+            <span class="wecom-folder-tab">13 campaign assets</span>
+            <div class="wecom-folder-stack">
+              <img src="assets/wecom-co/carousel-01.png" alt="">
+              <img src="assets/wecom-co/premiere-impression.png" alt="">
+              <img src="assets/wecom-co/carousel-03.png" alt="">
+            </div>
+          </div>`;
+        folder.querySelector('.wecom-folder-open').addEventListener('click', openFolder);
+        projects.append(folder);
+        updatePostsCount();
+      };
+      const folderObserver = new MutationObserver(mountWecomFolder);
+      folderObserver.observe(document.documentElement, { childList: true, subtree: true });
+      mountWecomFolder();
     }
     if (!document.querySelector('.scroll-progress')) {
       const bar = document.createElement('div');
