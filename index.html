@@ -656,6 +656,12 @@ document.addEventListener('DOMContentLoaded', async function() {
         const count = section.querySelector('.work-count');
         const originalCount = count && count.textContent;
         const sectionHead = section.querySelector('.work-section-head');
+        const removeOwnedNodes = (parent, selector) => {
+          if (!parent) return;
+          parent.querySelectorAll(selector).forEach((node) => {
+            if (node.parentNode === parent) parent.removeChild(node);
+          });
+        };
         if (sectionTitle === 'Trailers & teasers') {
           const trailerVideos = [
             {
@@ -703,7 +709,7 @@ document.addEventListener('DOMContentLoaded', async function() {
           const restoreTrailer = () => {
             if (restorePlaylists !== restoreTrailer) return;
             restorePlaylists = null;
-            projects.querySelectorAll('[data-trailer-video]').forEach((card) => card.remove());
+            removeOwnedNodes(projects, '[data-trailer-video]');
             if (count) count.textContent = originalCount;
           };
           restorePlaylists = restoreTrailer;
@@ -720,9 +726,9 @@ document.addEventListener('DOMContentLoaded', async function() {
         const restore = () => {
           if (restorePlaylists !== restore) return;
           restorePlaylists = null;
-          projects.querySelectorAll('.playlist-card').forEach((card) => card.remove());
+          removeOwnedNodes(projects, '.playlist-card');
           if (!hadPlaylistGridClass) projects.classList.remove('playlist-grid');
-          carouselControls.remove();
+          if (carouselControls.parentNode) carouselControls.parentNode.removeChild(carouselControls);
           if (count) count.textContent = originalCount;
         };
         restorePlaylists = restore;
@@ -903,6 +909,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       ];
       const galleryStyle = document.createElement('style');
       galleryStyle.textContent = `
+        .wecom-placeholder { display: none !important; }
         .wecom-folder-project {
           grid-column: 1 / -1 !important;
           display: grid !important;
@@ -1298,27 +1305,47 @@ document.addEventListener('DOMContentLoaded', async function() {
         if (event.target === dialog) closeFolder();
       });
 
+      const sectionCounts = {
+        'Longform series': 2,
+        'Shortform series': 3,
+        'Trailers & teasers': 2,
+        Logos: 4,
+        Prints: 3,
+        Posts: 1
+      };
       const mountWecomFolder = () => {
-        const postsSection = Array.from(document.querySelectorAll('#work .work-section')).find((section) => {
-          const title = section.querySelector('.work-section-head h2')?.textContent || '';
-          return /posts|publications/i.test(title);
+        const section = Array.from(document.querySelectorAll('#work .work-section')).find((item) => {
+          const title = item.querySelector('.work-section-head h2')?.textContent.trim();
+          return title === 'Posts' || title === 'Publications';
         });
-        const projects = postsSection && postsSection.querySelector('.projects');
+        if (!section) return;
+        const sectionTitle = section.querySelector('.work-section-head h2')?.textContent.trim();
+        const projects = section.querySelector('.projects');
         const existingFolders = document.querySelectorAll('#work .wecom-folder-project');
         existingFolders.forEach((folder) => {
-          if (!projects || folder.parentElement !== projects) folder.remove();
+          if (folder.parentElement !== projects) {
+            if (folder.parentNode) folder.parentNode.removeChild(folder);
+          }
         });
         if (!projects) return;
+
+        if (sectionTitle !== 'Posts' && sectionTitle !== 'Publications') {
+          const count = section.querySelector('.work-count');
+          const sectionCount = sectionCounts[sectionTitle];
+          if (count && Number.isInteger(sectionCount)) count.textContent = `(${String(sectionCount).padStart(2, '0')})`;
+          return;
+        }
 
         const placeholders = new Set(['Culture Drop', 'Summer Sessions', 'Launch Day', 'Today / Tomorrow']);
         projects.querySelectorAll('.project').forEach((project) => {
           const title = project.querySelector('.project-details h3')?.textContent.trim();
-          if (placeholders.has(title)) project.remove();
+          if (placeholders.has(title)) project.classList.add('wecom-placeholder');
         });
 
         const updatePostsCount = () => {
-          const count = postsSection.querySelector('.work-count');
-          const value = `(${String(projects.querySelectorAll('.project').length).padStart(2, '0')})`;
+          const count = section.querySelector('.work-count');
+          const visibleProjects = projects.querySelectorAll('.project:not(.wecom-placeholder)').length;
+          const value = `(${String(visibleProjects).padStart(2, '0')})`;
           if (count && count.textContent !== value) count.textContent = value;
         };
         if (projects.querySelector('.wecom-folder-project')) {
@@ -1351,7 +1378,12 @@ document.addEventListener('DOMContentLoaded', async function() {
         updatePostsCount();
       };
       const folderObserver = new MutationObserver(mountWecomFolder);
-      folderObserver.observe(document.documentElement, { childList: true, subtree: true });
+      folderObserver.observe(document.documentElement, { childList: true, characterData: true, subtree: true });
+      document.addEventListener('click', (event) => {
+        const target = event.target;
+        if (!(target instanceof Element) || !target.closest('#work .work-tabs .tab, #work .work-filters .tab')) return;
+        requestAnimationFrame(() => requestAnimationFrame(mountWecomFolder));
+      }, true);
       mountWecomFolder();
     }
     if (!document.querySelector('.scroll-progress')) {
