@@ -910,6 +910,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       const galleryStyle = document.createElement('style');
       galleryStyle.textContent = `
         .wecom-placeholder { display: none !important; }
+        .wecom-folder-project[hidden] { display: none !important; }
         .wecom-folder-project {
           grid-column: 1 / -1 !important;
           display: grid !important;
@@ -1314,6 +1315,9 @@ document.addEventListener('DOMContentLoaded', async function() {
         Posts: 1
       };
       const mountWecomFolder = () => {
+        const activeFilter = document.querySelector('#work .work-filters .tab[aria-pressed="true"]');
+        const activeFilterTitle = activeFilter?.textContent.trim();
+        const isPostsFilterActive = activeFilterTitle === 'Posts' || activeFilterTitle === 'Publications';
         const getSectionTitle = (item) =>
           item.querySelector('.work-section-head h2, .work-section-heading h2')?.textContent.trim();
         const section = Array.from(document.querySelectorAll('#work .work-section')).find((item) => {
@@ -1323,6 +1327,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         const projects = section?.querySelector('.projects');
         document.querySelectorAll('#work .wecom-folder-project').forEach((folder) => {
           if (folder.parentElement !== projects) folder.remove();
+          else folder.hidden = !isPostsFilterActive;
         });
         if (!section) return;
 
@@ -1353,6 +1358,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
         const folder = document.createElement('article');
         folder.className = 'project wecom-folder-project';
+        folder.hidden = !isPostsFilterActive;
         folder.innerHTML = `
           <div class="wecom-folder-copy">
             <div class="wecom-folder-kicker">A social design collection</div>
