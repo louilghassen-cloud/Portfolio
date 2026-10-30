@@ -1314,22 +1314,20 @@ document.addEventListener('DOMContentLoaded', async function() {
         Posts: 1
       };
       const mountWecomFolder = () => {
+        const getSectionTitle = (item) =>
+          item.querySelector('.work-section-head h2, .work-section-heading h2')?.textContent.trim();
         const section = Array.from(document.querySelectorAll('#work .work-section')).find((item) => {
-          const title = item.querySelector('.work-section-head h2')?.textContent.trim();
+          const title = getSectionTitle(item);
           return title === 'Posts' || title === 'Publications';
         });
-        if (!section) return;
-        const sectionTitle = section.querySelector('.work-section-head h2')?.textContent.trim();
-        const projects = section.querySelector('.projects');
-        const existingFolders = document.querySelectorAll('#work .wecom-folder-project');
-        existingFolders.forEach((folder) => {
-          if (folder.parentElement !== projects) {
-            if (folder.parentNode) folder.parentNode.removeChild(folder);
-          }
+        const projects = section?.querySelector('.projects');
+        document.querySelectorAll('#work .wecom-folder-project').forEach((folder) => {
+          if (folder.parentElement !== projects) folder.remove();
         });
-        if (!projects) return;
+        if (!section) return;
 
-        if (sectionTitle !== 'Posts' && sectionTitle !== 'Publications') {
+        const sectionTitle = getSectionTitle(section);
+        if (!projects) {
           const count = section.querySelector('.work-count');
           const sectionCount = sectionCounts[sectionTitle];
           if (count && Number.isInteger(sectionCount)) count.textContent = `(${String(sectionCount).padStart(2, '0')})`;
