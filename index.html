@@ -923,18 +923,18 @@ document.addEventListener('DOMContentLoaded', async function() {
         { title: 'ENAU', src: 'assets/AIESEC/enaustory.png', alt: 'AIESEC ENAU story', type: 'Story', driveId: '1ONdauvt4nqiUmcSnIQNjUC6EpAV4amJw' }
       ];
       const printAssets = [
-        { title: 'Programme de Formation CSF — Support', type: 'Booklet', pages: 10, src: 'assets/prints/booklet-01-cover.png', file: 'assets/prints/booklet-01.pdf', driveId: '1LMQgYzhchuFyhbYoYDRhaPYxN1qjpFPQ' },
-        { title: 'Module 1 — Maîtrise de la prospection téléphonique', type: 'Booklet', pages: 4, src: 'assets/prints/booklet-02-cover.png', file: 'assets/prints/booklet-02.pdf', driveId: '1oOLlU1AArnjuzaNY2T-2EvwuuJMeISTC' },
-        { title: 'Module 3 — Soumission technique en rendez-vous stratégique', type: 'Booklet', pages: 8, src: 'assets/prints/booklet-03-cover.png', file: 'assets/prints/booklet-03.pdf', driveId: '1-ryzXXhaocLZ64Fv2oediSwWHsv5CWZB' },
-        { title: 'Module 3 — Fiche mémo', type: 'Booklet', pages: 6, src: 'assets/prints/booklet-04-cover.png', file: 'assets/prints/booklet-04.pdf', driveId: '1Fq4ctMiRKMKvFUHjHyHrVxoq7u1gHV-I' },
-        { title: 'Roll-up', type: 'Roll-up', src: 'assets/prints/rollup-cover.png', file: 'assets/prints/rollup.pdf', driveId: '1gHM-KUdYPgBQy_vUlFnIdyaY7eSUnYcR' },
-        { title: 'Flag', type: 'Flag', src: 'assets/prints/flag-cover.png', file: 'assets/prints/flag.pdf', driveId: '1roUz2tCKRVBL0UtfaLvt98DOUEyVJhvz' },
-        { title: 'Characters Poster', type: 'Poster', src: 'assets/prints/poster-01-cover.png', file: 'assets/prints/poster-01.pdf', driveId: '1zyxwQRZ6BdT3N6T7Onk4YO7etYItHRHp' },
-        { title: 'FC Poster', type: 'Poster', src: 'assets/prints/poster-02-cover.png', file: 'assets/prints/poster-02.pdf', driveId: '1oyhjG7_Tg6XKfC5xjstmP3_disVSbAJT' },
-        { title: 'Poster 03', type: 'Poster', src: 'assets/prints/poster-03-cover.png', file: 'assets/prints/poster-03.pdf', driveId: '1OPtsZRc6cVXgFT4SEsLGwHw-qWnipZPe' },
-        { title: 'PC avec abonnement', type: 'Pricing menu', src: 'assets/prints/menu-01.png', file: 'assets/prints/menu-01.png', driveId: '1l3U1BpgSbPmSZvUpb_7IkqBevLEE_bqx' },
-        { title: 'PC hors abonnement', type: 'Pricing menu', src: 'assets/prints/menu-02.png', file: 'assets/prints/menu-02.png', driveId: '10kxZfKOsuNBK3KxIn-UlYpieSRsBfWzJ' },
-        { title: 'PS5', type: 'Pricing menu', src: 'assets/prints/menu-03.png', file: 'assets/prints/menu-03.png', driveId: '1ZFYvygvEBpWtYTVibu7GlmQgkD3glmL6' }
+        { title: 'Programme de Formation CSF — Support', type: 'Booklet', label: 'BOOKLET', ratio: '10 PAGES', meta: 'Training material', pages: 10, src: 'assets/prints/booklet-01-cover.png', file: 'assets/prints/booklet-01.pdf', driveId: '1LMQgYzhchuFyhbYoYDRhaPYxN1qjpFPQ' },
+        { title: 'Module 1 — Maîtrise de la prospection téléphonique', type: 'Booklet', label: 'BOOKLET', ratio: '4 PAGES', meta: 'Training material', pages: 4, src: 'assets/prints/booklet-02-cover.png', file: 'assets/prints/booklet-02.pdf', driveId: '1oOLlU1AArnjuzaNY2T-2EvwuuJMeISTC' },
+        { title: 'Module 3 — Soumission technique en rendez-vous stratégique', type: 'Booklet', label: 'BOOKLET', ratio: '8 PAGES', meta: 'Training material', pages: 8, src: 'assets/prints/booklet-03-cover.png', file: 'assets/prints/booklet-03.pdf', driveId: '1-ryzXXhaocLZ64Fv2oediSwWHsv5CWZB' },
+        { title: 'Module 3 — Fiche mémo', type: 'Booklet', label: 'BOOKLET', ratio: '6 PAGES', meta: 'Training material', pages: 6, src: 'assets/prints/booklet-04-cover.png', file: 'assets/prints/booklet-04.pdf', driveId: '1Fq4ctMiRKMKvFUHjHyHrVxoq7u1gHV-I' },
+        { title: 'Roll-up', type: 'Roll-up', label: 'ROLL-UP', ratio: '1/2', meta: 'Large-format display', src: 'assets/prints/rollup-cover.png', file: 'assets/prints/rollup.pdf', driveId: '1gHM-KUdYPgBQy_vUlFnIdyaY7eSUnYcR' },
+        { title: 'Flag', type: 'Flag', label: 'FLAG', ratio: '1/5', meta: 'Large-format display', src: 'assets/prints/flag-cover.png', file: 'assets/prints/flag.pdf', driveId: '1roUz2tCKRVBL0UtfaLvt98DOUEyVJhvz' },
+        { title: 'Characters Poster', type: 'Poster', label: 'POSTER', ratio: '3/4', meta: 'Poster design', src: 'assets/prints/poster-01-cover.png', file: 'assets/prints/poster-01.pdf', driveId: '1zyxwQRZ6BdT3N6T7Onk4YO7etYItHRHp' },
+        { title: 'FC Poster', type: 'Poster', label: 'POSTER', ratio: '3/4', meta: 'Poster design', src: 'assets/prints/poster-02-cover.png', file: 'assets/prints/poster-02.pdf', driveId: '1oyhjG7_Tg6XKfC5xjstmP3_disVSbAJT' },
+        { title: 'Poster 03', type: 'Poster', label: 'POSTER', ratio: '3/4', meta: 'Poster design', src: 'assets/prints/poster-03-cover.png', file: 'assets/prints/poster-03.pdf', driveId: '1OPtsZRc6cVXgFT4SEsLGwHw-qWnipZPe' },
+        { title: 'PC avec abonnement', type: 'Pricing menu', label: 'MENU', ratio: '16/9', meta: 'Pricing menu', src: 'assets/prints/menu-01.png', file: 'assets/prints/menu-01.png', driveId: '1l3U1BpgSbPmSZvUpb_7IkqBevLEE_bqx' },
+        { title: 'PC hors abonnement', type: 'Pricing menu', label: 'MENU', ratio: '16/9', meta: 'Pricing menu', src: 'assets/prints/menu-02.png', file: 'assets/prints/menu-02.png', driveId: '10kxZfKOsuNBK3KxIn-UlYpieSRsBfWzJ' },
+        { title: 'PS5', type: 'Pricing menu', label: 'MENU', ratio: '16/9', meta: 'Pricing menu', src: 'assets/prints/menu-03.png', file: 'assets/prints/menu-03.png', driveId: '1ZFYvygvEBpWtYTVibu7GlmQgkD3glmL6' }
       ];
       const galleryStyle = document.createElement('style');
       galleryStyle.textContent = `
@@ -945,11 +945,10 @@ document.addEventListener('DOMContentLoaded', async function() {
         .wecom-placeholder { display: none !important; }
         .wecom-folder-project[hidden] { display: none !important; }
         .aiesec-folder-project[hidden] { display: none !important; }
-        .prints-folder-project[hidden] { display: none !important; }
         .cover.logo-drive-cover::before, .logo-drive-cover .art { display: none; }
         .logo-drive-preview { position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; border: 0; }
         .logo-drive-cover .work-label { z-index: 2; }
-        .wecom-folder-project, .aiesec-folder-project, .prints-folder-project {
+        .wecom-folder-project, .aiesec-folder-project {
           grid-column: 1 / -1 !important;
           display: grid !important;
           grid-template-columns: minmax(0, .92fr) minmax(0, 1.08fr);
@@ -965,7 +964,7 @@ document.addEventListener('DOMContentLoaded', async function() {
           box-shadow: 0 24px 70px rgba(0,0,0,.2);
           cursor: default;
         }
-        .wecom-folder-project:hover, .aiesec-folder-project:hover, .prints-folder-project:hover { outline: 1px solid rgba(198,244,50,.42); }
+        .wecom-folder-project:hover, .aiesec-folder-project:hover { outline: 1px solid rgba(198,244,50,.42); }
         .wecom-folder-copy { min-width: 0; }
         .wecom-folder-kicker { display: flex; align-items: center; gap: 9px; margin-bottom: 20px; color: #b7b7b1; font-size: .68rem; font-weight: 650; letter-spacing: .16em; text-transform: uppercase; }
         .wecom-folder-kicker::before { width: 7px; height: 7px; border-radius: 50%; background: #C6F432; box-shadow: 0 0 14px rgba(198,244,50,.55); content: ''; }
@@ -983,9 +982,9 @@ document.addEventListener('DOMContentLoaded', async function() {
         .wecom-folder-stack img:nth-child(1) { left: 8%; transform: rotate(-12deg) translateY(8px); }
         .wecom-folder-stack img:nth-child(2) { left: 30%; z-index: 2; transform: rotate(1deg) translateY(-3px); }
         .wecom-folder-stack img:nth-child(3) { right: 7%; transform: rotate(12deg) translateY(7px); }
-        .wecom-folder-project:hover .wecom-folder-stack img:nth-child(1), .aiesec-folder-project:hover .wecom-folder-stack img:nth-child(1), .prints-folder-project:hover .wecom-folder-stack img:nth-child(1) { transform: rotate(-16deg) translate(-5px, 4px); }
-        .wecom-folder-project:hover .wecom-folder-stack img:nth-child(2), .aiesec-folder-project:hover .wecom-folder-stack img:nth-child(2), .prints-folder-project:hover .wecom-folder-stack img:nth-child(2) { transform: rotate(0) translateY(-9px); }
-        .wecom-folder-project:hover .wecom-folder-stack img:nth-child(3), .aiesec-folder-project:hover .wecom-folder-stack img:nth-child(3), .prints-folder-project:hover .wecom-folder-stack img:nth-child(3) { transform: rotate(16deg) translate(5px, 4px); }
+        .wecom-folder-project:hover .wecom-folder-stack img:nth-child(1), .aiesec-folder-project:hover .wecom-folder-stack img:nth-child(1) { transform: rotate(-16deg) translate(-5px, 4px); }
+        .wecom-folder-project:hover .wecom-folder-stack img:nth-child(2), .aiesec-folder-project:hover .wecom-folder-stack img:nth-child(2) { transform: rotate(0) translateY(-9px); }
+        .wecom-folder-project:hover .wecom-folder-stack img:nth-child(3), .aiesec-folder-project:hover .wecom-folder-stack img:nth-child(3) { transform: rotate(16deg) translate(5px, 4px); }
         .wecom-dialog { width: min(1080px, calc(100vw - 28px)); max-width: none; max-height: min(90vh, 1050px); padding: 0; overflow: auto; border: 1px solid rgba(245,245,240,.13); border-radius: 20px; background: #111113; color: #F5F5F0; font-family: Archivo, sans-serif; box-shadow: 0 28px 100px rgba(0,0,0,.62); }
         .wecom-dialog::backdrop { background: rgba(4,4,5,.82); backdrop-filter: blur(9px); }
         .wecom-dialog-shell { padding: clamp(20px, 4vw, 38px); }
@@ -1043,6 +1042,12 @@ document.addEventListener('DOMContentLoaded', async function() {
         .wecom-post-footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-top: 16px; }
         .wecom-open-drive { color: #b5b5af; font-size: .72rem; text-decoration-color: rgba(198,244,50,.6); text-underline-offset: 4px; }
         .wecom-open-drive:hover { color: #C6F432; }
+        .print-project-cover { display: grid; width: 100%; box-sizing: border-box; padding: 0; border: 1px solid rgba(255,255,255,.04); background: #181819; color: inherit; text-decoration: none; cursor: pointer; }
+        .print-project-cover img { position: absolute; inset: 0; z-index: 0; display: block; width: 100%; height: 100%; object-fit: cover; }
+        .print-project-cover .work-label { z-index: 2; }
+        .print-book-page { height: min(62vh, 58vw, 660px); min-height: 0; aspect-ratio: 1 / 1.414; }
+        .print-book-page iframe { position: absolute; inset: 0; width: 100%; height: 100%; min-height: 0; }
+        .print-book-blank { min-height: 0; }
         .print-book-viewer[hidden] { display: none !important; }
         .print-book-viewer { padding-top: 25px; }
         .print-book-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 16px; }
@@ -1050,11 +1055,12 @@ document.addEventListener('DOMContentLoaded', async function() {
         .print-book-back:hover { color: #C6F432; }
         .print-book-title { margin: 0; color: #F5F5F0; font-size: 1rem; text-align: right; }
         .print-book-stage { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2px; padding: 18px; border: 1px solid rgba(245,245,240,.08); border-radius: 14px; background: radial-gradient(ellipse at center, #34302b, #121111 72%); box-shadow: inset 0 0 35px rgba(0,0,0,.36); }
-        .print-book-page { position: relative; display: grid; min-width: 0; min-height: min(66vh, 700px); place-items: center; overflow: hidden; background: #f4f1e9; box-shadow: 0 10px 32px rgba(0,0,0,.35); }
+        .print-book-page { position: relative; display: grid; min-width: 0; place-items: center; overflow: hidden; background: #f4f1e9; box-shadow: 0 10px 32px rgba(0,0,0,.35); }
         .print-book-page:first-child { border-radius: 4px 0 0 4px; }
         .print-book-page:last-child { border-radius: 0 4px 4px 0; }
-        .print-book-page iframe { display: block; width: 100%; height: min(66vh, 700px); min-height: 360px; border: 0; background: #fff; }
-        .print-book-blank { display: grid; width: 100%; min-height: min(66vh, 700px); place-items: center; color: #8b8983; font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; }
+        .print-book-page iframe { display: block; border: 0; background: #fff; }
+        .print-book-page iframe[hidden], .print-book-blank[hidden] { display: none; }
+        .print-book-blank { display: grid; width: 100%; height: 100%; min-height: 0; place-items: center; color: #8b8983; font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; }
         .print-book-footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-top: 16px; }
         .print-book-controls { display: flex; gap: 8px; }
         .print-book-controls button { min-height: 38px; padding: 0 14px; border: 1px solid rgba(245,245,240,.14); border-radius: 999px; background: rgba(245,245,240,.04); color: #F5F5F0; font-size: .75rem; cursor: pointer; }
@@ -1064,14 +1070,13 @@ document.addEventListener('DOMContentLoaded', async function() {
         .print-book-original { color: #b5b5af; font-size: .72rem; text-underline-offset: 4px; }
         .print-book-original:hover { color: #C6F432; }
         @media (max-width: 760px) {
-          .wecom-folder-project, .aiesec-folder-project, .prints-folder-project { grid-template-columns: minmax(0, 1fr); gap: 25px; }
+          .wecom-folder-project, .aiesec-folder-project { grid-template-columns: minmax(0, 1fr); gap: 25px; }
           .wecom-folder-copy h3 { font-size: clamp(2.5rem, 12vw, 4rem); }
           .wecom-folder-preview { min-height: 225px; }
           .wecom-assets-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-          .print-book-page, .print-book-page iframe, .print-book-blank { min-height: 56vh; }
         }
         @media (max-width: 480px) {
-          .wecom-folder-project, .aiesec-folder-project, .prints-folder-project { padding: 22px; border-radius: 16px; }
+          .wecom-folder-project, .aiesec-folder-project { padding: 22px; border-radius: 16px; }
           .wecom-folder-stack { width: 82%; height: 175px; }
           .wecom-folder-stack img { height: 160px; }
           .wecom-dialog { width: calc(100vw - 16px); max-height: 94vh; border-radius: 14px; }
@@ -1083,7 +1088,6 @@ document.addEventListener('DOMContentLoaded', async function() {
           .wecom-asset-visual { min-height: 125px; }
           .wecom-asset-caption { align-items: flex-start; flex-direction: column; gap: 4px; }
           .print-book-stage { gap: 1px; padding: 7px; }
-          .print-book-page, .print-book-page iframe, .print-book-blank { min-height: 52vh; }
           .print-book-footer { flex-wrap: wrap; }
         }
         @media (prefers-reduced-motion: reduce) {
@@ -1441,27 +1445,19 @@ document.addEventListener('DOMContentLoaded', async function() {
 
       const printsDialog = document.createElement('dialog');
       printsDialog.className = 'wecom-dialog prints-dialog';
-      printsDialog.setAttribute('aria-labelledby', 'prints-gallery-title');
+      printsDialog.setAttribute('aria-labelledby', 'prints-reader-title');
       printsDialog.innerHTML = `
         <div class="wecom-dialog-shell">
           <header class="wecom-dialog-header">
             <div>
-              <p class="wecom-dialog-kicker">Booklets &amp; Prints · Editorial and print design</p>
-              <h2 id="prints-gallery-title">Booklets &amp; Prints</h2>
-              <p class="wecom-dialog-subtitle">Browse booklets, posters, menus and large-format print designs.</p>
+              <p class="wecom-dialog-kicker">Booklet reader · Editorial and print design</p>
+              <h2 id="prints-reader-title">Read booklet</h2>
             </div>
-            <button class="wecom-dialog-close" type="button" aria-label="Close Booklets & Prints folder">×</button>
+            <button class="wecom-dialog-close" type="button" aria-label="Close booklet reader">×</button>
           </header>
-          <section class="prints-gallery" aria-labelledby="prints-assets-title">
-            <div class="wecom-assets-heading">
-              <h3 id="prints-assets-title">Print collection</h3>
-              <span>12 pieces · 4 booklets</span>
-            </div>
-            <div class="wecom-assets-grid"></div>
-          </section>
-          <section class="print-book-viewer" aria-label="Booklet reader" hidden>
+          <section class="print-book-viewer" aria-label="Booklet reader">
             <div class="print-book-header">
-              <button class="print-book-back" type="button">← Back to collection</button>
+              <button class="print-book-back" type="button">← Close booklet</button>
               <h3 class="print-book-title"></h3>
             </div>
             <div class="print-book-stage">
@@ -1484,9 +1480,6 @@ document.addEventListener('DOMContentLoaded', async function() {
             </div>
           </section>
         </div>`;
-      const printsAssetsGrid = printsDialog.querySelector('.prints-gallery .wecom-assets-grid');
-      const printsGallery = printsDialog.querySelector('.prints-gallery');
-      const printBookViewer = printsDialog.querySelector('.print-book-viewer');
       const printBookTitle = printsDialog.querySelector('.print-book-title');
       const printBookFrames = Array.from(printsDialog.querySelectorAll('.print-book-page iframe'));
       const printBookBlanks = Array.from(printsDialog.querySelectorAll('.print-book-blank'));
@@ -1524,75 +1517,23 @@ document.addEventListener('DOMContentLoaded', async function() {
         activeBooklet = asset;
         activeBookSpread = 0;
         lastPrintBookTrigger = trigger;
-        printsGallery.hidden = true;
-        printBookViewer.hidden = false;
         printBookTitle.textContent = asset.title;
         openPrintBookOriginal.href = `https://drive.google.com/file/d/${asset.driveId}/view`;
         renderBookSpread();
+        if (!printsDialog.open) printsDialog.showModal();
         printsDialog.querySelector('.print-book-back').focus();
       };
-      const closePrintBook = (restoreFocus = true) => {
+      const clearPrintBook = () => {
         printBookFrames.forEach((frame) => {
           frame.removeAttribute('src');
           frame.hidden = true;
         });
         printBookBlanks.forEach((blank) => { blank.hidden = true; });
-        printBookViewer.hidden = true;
-        printsGallery.hidden = false;
         activeBooklet = null;
-        if (restoreFocus && lastPrintBookTrigger && lastPrintBookTrigger.isConnected) lastPrintBookTrigger.focus();
+        if (lastPrintBookTrigger && lastPrintBookTrigger.isConnected) lastPrintBookTrigger.focus();
         lastPrintBookTrigger = null;
       };
-      printAssets.forEach((asset) => {
-        const tile = document.createElement('article');
-        tile.className = 'wecom-asset-tile';
-        const visual = document.createElement('div');
-        visual.className = 'wecom-asset-visual';
-        const preview = document.createElement('img');
-        preview.src = asset.src;
-        preview.alt = `${asset.title} preview`;
-        preview.loading = 'lazy';
-        preview.decoding = 'async';
-        if (asset.type === 'Booklet') {
-          const read = document.createElement('button');
-          read.type = 'button';
-          read.className = 'print-book-cover';
-          read.setAttribute('aria-label', `Read ${asset.title} as a book`);
-          read.append(preview);
-          read.addEventListener('click', () => openPrintBook(asset, read));
-          visual.append(read);
-        } else {
-          const fileLink = document.createElement('a');
-          fileLink.href = asset.file;
-          fileLink.target = '_blank';
-          fileLink.rel = 'noopener noreferrer';
-          fileLink.setAttribute('aria-label', `Open ${asset.title}`);
-          fileLink.append(preview);
-          visual.append(fileLink);
-        }
-        const caption = document.createElement('div');
-        caption.className = 'wecom-asset-caption';
-        const title = document.createElement('strong');
-        title.textContent = asset.title;
-        const type = document.createElement('span');
-        type.textContent = asset.type === 'Booklet' ? `Booklet · ${asset.pages} pages` : asset.type;
-        const open = document.createElement(asset.type === 'Booklet' ? 'button' : 'a');
-        open.className = 'wecom-asset-view';
-        if (asset.type === 'Booklet') {
-          open.type = 'button';
-          open.textContent = 'Read booklet ↗';
-          open.addEventListener('click', () => openPrintBook(asset, open));
-        } else {
-          open.href = asset.file;
-          open.target = '_blank';
-          open.rel = 'noopener noreferrer';
-          open.textContent = 'View ↗';
-        }
-        caption.append(title, type, open);
-        tile.append(visual, caption);
-        printsAssetsGrid.append(tile);
-      });
-      printsDialog.querySelector('.print-book-back').addEventListener('click', () => closePrintBook());
+      printsDialog.querySelector('.print-book-back').addEventListener('click', () => printsDialog.close());
       previousSpread.addEventListener('click', () => {
         activeBookSpread = Math.max(0, activeBookSpread - 1);
         renderBookSpread();
@@ -1603,19 +1544,11 @@ document.addEventListener('DOMContentLoaded', async function() {
         activeBookSpread = Math.min(spreadCount - 1, activeBookSpread + 1);
         renderBookSpread();
       });
-      printsDialog.querySelector('.wecom-dialog-close').addEventListener('click', () => {
-        closePrintBook(false);
-        printsDialog.close();
-      });
+      printsDialog.querySelector('.wecom-dialog-close').addEventListener('click', () => printsDialog.close());
       printsDialog.addEventListener('click', (event) => {
-        if (event.target === printsDialog) {
-          closePrintBook(false);
-          printsDialog.close();
-        }
+        if (event.target === printsDialog) printsDialog.close();
       });
       printsDialog.addEventListener('keydown', (event) => {
-        if (event.key === 'Escape' && !printBookViewer.hidden) closePrintBook(false);
-        if (printBookViewer.hidden) return;
         if (event.key === 'ArrowLeft') {
           event.preventDefault();
           previousSpread.click();
@@ -1624,6 +1557,7 @@ document.addEventListener('DOMContentLoaded', async function() {
           nextSpread.click();
         }
       });
+      printsDialog.addEventListener('close', clearPrintBook);
       document.body.append(printsDialog);
 
       const sectionCounts = {
@@ -1631,7 +1565,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         'Shortform series': 3,
         'Trailers & teasers': 2,
         Logos: 4,
-        Prints: 4,
+        Prints: 12,
         Posts: 1
       };
       const mountPrintsCollection = () => {
@@ -1650,7 +1584,10 @@ document.addEventListener('DOMContentLoaded', async function() {
           return title === 'Prints';
         });
         if (!isPrintsFilterActive) {
-          document.querySelectorAll('#work .prints-folder-project').forEach((folder) => folder.remove());
+          document.querySelectorAll('#work .print-asset-project').forEach((project) => {
+            const parent = project.parentElement;
+            if (parent?.matches('#work .work-section .projects') && project.parentElement === parent) parent.removeChild(project);
+          });
           document.querySelectorAll('#work .work-section h2[data-display-label="Booklets & Prints"]').forEach((heading) => {
             heading.removeAttribute('data-display-label');
             heading.removeAttribute('aria-label');
@@ -1667,36 +1604,60 @@ document.addEventListener('DOMContentLoaded', async function() {
         const projects = section.querySelector('.projects');
         if (!projects) return;
 
-        let folder = projects.querySelector('.prints-folder-project');
-        if (!folder) {
-          folder = document.createElement('article');
-          folder.className = 'project prints-folder-project';
-          folder.innerHTML = `
-            <div class="wecom-folder-copy">
-              <div class="wecom-folder-kicker">Editorial &amp; print design</div>
-              <h3>Booklets &amp; Prints</h3>
-              <p>Training booklets, pricing menus and large-format print designs in one collection.</p>
-              <div class="wecom-folder-actions">
-                <button class="wecom-folder-open" type="button">Open collection <span aria-hidden="true">↗</span></button>
-                <span class="wecom-folder-total">12 pieces · 4 booklets · 8 print designs</span>
-              </div>
-            </div>
-            <div class="wecom-folder-preview" aria-hidden="true">
-              <span class="wecom-folder-tab">12 print pieces</span>
-              <div class="wecom-folder-stack">
-                <img src="assets/prints/booklet-01-cover.png" alt="">
-                <img src="assets/prints/poster-01-cover.png" alt="">
-                <img src="assets/prints/menu-01.png" alt="">
-              </div>
-            </div>`;
-          folder.querySelector('.wecom-folder-open').addEventListener('click', () => {
-            if (!printsDialog.open) printsDialog.showModal();
+        const placeholders = new Set(['No Signal', 'Shape / Space', 'Motion Week']);
+        Array.from(projects.children).forEach((project) => {
+          if (!project.matches('.project')) return;
+          const title = project.querySelector('.project-details h3')?.textContent.trim();
+          if (placeholders.has(title) && project.parentElement === projects) projects.removeChild(project);
+        });
+        const existingPrintProjects = Array.from(projects.children).filter((project) => project.matches('.print-asset-project'));
+        const hasCurrentPrintProjects = existingPrintProjects.length === printAssets.length &&
+          existingPrintProjects.every((project, index) => project.dataset.printAsset === printAssets[index].file);
+        if (!hasCurrentPrintProjects) {
+          existingPrintProjects.forEach((project) => projects.removeChild(project));
+          printAssets.forEach((asset) => {
+            const project = document.createElement('article');
+            project.className = 'project narrow print-asset-project';
+            project.dataset.printAsset = asset.file;
+            const cover = document.createElement(asset.type === 'Booklet' ? 'button' : 'a');
+            cover.className = 'cover poster print-project-cover';
+            if (asset.type === 'Booklet') {
+              cover.type = 'button';
+              cover.setAttribute('aria-label', `Read ${asset.title} as a book`);
+              cover.addEventListener('click', () => openPrintBook(asset, cover));
+            } else {
+              cover.href = asset.file;
+              cover.target = '_blank';
+              cover.rel = 'noopener noreferrer';
+              cover.setAttribute('aria-label', `Open ${asset.title}`);
+            }
+            const preview = document.createElement('img');
+            preview.src = asset.src;
+            preview.alt = `${asset.title} preview`;
+            preview.loading = 'lazy';
+            preview.decoding = 'async';
+            const label = document.createElement('span');
+            label.className = 'work-label design';
+            label.textContent = asset.label;
+            cover.append(preview, label);
+
+            const details = document.createElement('div');
+            details.className = 'project-details';
+            const ratio = document.createElement('span');
+            ratio.className = 'project-ratio';
+            ratio.textContent = asset.ratio;
+            const title = document.createElement('h3');
+            title.textContent = asset.title;
+            const meta = document.createElement('div');
+            meta.className = 'project-meta';
+            meta.textContent = asset.meta;
+            details.append(ratio, title, meta);
+            project.append(cover, details);
+            projects.append(project);
           });
-          projects.append(folder);
         }
-        folder.hidden = !isPrintsFilterActive;
         const count = section.querySelector('.work-count');
-        const visibleProjects = projects.querySelectorAll('.project:not(.wecom-placeholder)').length;
+        const visibleProjects = projects.querySelectorAll(':scope > .project').length;
         const value = `(${String(visibleProjects).padStart(2, '0')})`;
         if (count && count.textContent !== value) count.textContent = value;
       };
