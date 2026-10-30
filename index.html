@@ -673,6 +673,11 @@ document.addEventListener('DOMContentLoaded', async function() {
               title: 'BK Agency',
               videoId: '13yfAIfe1umRCO--dJpcwR3D_CFW9F9SP',
               info: 'Agency video'
+            },
+            {
+              title: 'Teaser',
+              videoId: '1phOTycL2H7pGPAMe1ledUm7BCWvJJi6e',
+              info: 'Teaser'
             }
           ];
           trailerVideos.forEach((video) => {
@@ -683,7 +688,9 @@ document.addEventListener('DOMContentLoaded', async function() {
             cover.className = 'cover trailer-player';
             const label = document.createElement('span');
             label.className = 'work-label';
-            label.textContent = video.info === 'Official trailer' ? 'TRAILER' : 'VIDEO';
+            label.textContent = video.info === 'Official trailer'
+              ? 'TRAILER'
+              : video.info === 'Teaser' ? 'TEASER' : 'VIDEO';
             const frame = document.createElement('iframe');
             frame.src = `https://drive.google.com/file/d/${video.videoId}/preview`;
             frame.title = `${video.title} - ${video.info}`;
@@ -911,6 +918,9 @@ document.addEventListener('DOMContentLoaded', async function() {
       galleryStyle.textContent = `
         .wecom-placeholder { display: none !important; }
         .wecom-folder-project[hidden] { display: none !important; }
+        .cover.logo-drive-cover::before { display: none; }
+        .logo-drive-cover iframe { position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; border: 0; }
+        .logo-drive-cover .work-label { z-index: 2; }
         .wecom-folder-project {
           grid-column: 1 / -1 !important;
           display: grid !important;
@@ -1389,6 +1399,62 @@ document.addEventListener('DOMContentLoaded', async function() {
         requestAnimationFrame(() => requestAnimationFrame(mountWecomFolder));
       }, true);
       mountWecomFolder();
+
+      const logoVideos = [
+        '1_e9RFlLTFzRtftEkJyiOkZNUJLiiIxmQ',
+        '1TwS4YnCQfzGKn2SL5L7HTNpAI2jHZADr',
+        '19LksVYJy2tn9EIcikzzwJ9I20hBitXdz',
+        '1ObPWcYK94oVwaVTOFoB0DeaOC_TdD7Aw',
+        '1KBnDIUEqJpNlHtJcn6k45ierG6AXyhZ9'
+      ];
+      const mountLogoVideos = () => {
+        const section = Array.from(document.querySelectorAll('#work .work-section')).find((item) => {
+          const title = item.querySelector('.work-section-head h2, .work-section-heading h2')?.textContent.trim();
+          return title === 'Logos';
+        });
+        const projects = section?.querySelector('.projects');
+        if (!section || !projects) return;
+
+        logoVideos.forEach((videoId, index) => {
+          if (projects.querySelector(`[data-logo-drive-id="${videoId}"]`)) return;
+
+          const card = document.createElement('article');
+          card.className = 'project narrow';
+          card.dataset.logoDriveId = videoId;
+          const cover = document.createElement('div');
+          cover.className = 'cover square logo-drive-cover';
+          const label = document.createElement('span');
+          label.className = 'work-label';
+          label.textContent = 'LOGO';
+          const frame = document.createElement('iframe');
+          frame.src = `https://drive.google.com/file/d/${videoId}/preview`;
+          frame.title = `Logo ${String(index + 1).padStart(2, '0')} - Drive preview`;
+          frame.loading = 'lazy';
+          frame.allow = 'autoplay; encrypted-media; fullscreen; picture-in-picture';
+          cover.append(frame, label);
+
+          const details = document.createElement('div');
+          details.className = 'project-details';
+          const ratio = document.createElement('span');
+          ratio.className = 'project-ratio';
+          ratio.textContent = '1/1';
+          const title = document.createElement('h3');
+          title.textContent = `Logo ${String(index + 1).padStart(2, '0')}`;
+          const meta = document.createElement('div');
+          meta.className = 'project-meta';
+          meta.textContent = 'Brand identity';
+          details.append(ratio, title, meta);
+          card.append(cover, details);
+          projects.append(card);
+        });
+
+        const count = section.querySelector('.work-count');
+        const value = `(${String(projects.querySelectorAll('.project').length).padStart(2, '0')})`;
+        if (count && count.textContent !== value) count.textContent = value;
+      };
+      const logoObserver = new MutationObserver(mountLogoVideos);
+      logoObserver.observe(document.documentElement, { childList: true, subtree: true });
+      mountLogoVideos();
     }
     if (!document.querySelector('.scroll-progress')) {
       const bar = document.createElement('div');
