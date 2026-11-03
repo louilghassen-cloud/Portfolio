@@ -440,9 +440,8 @@ document.addEventListener('DOMContentLoaded', async function() {
     {
       const shortformPlaylists = [
         {
-          title: 'groupaxion',
+          title: 'GroupaXion',
           videos: [
-            '1hJwQUyWQz11jWVtXr28q8JkFXc0rWNO2',
             '11VF1kgKQviHDQw2alHJmLVCVkdIo5EWT',
             '1bNapdwneFDGzXcX189OBkGdI7ohTYV7k',
             '1fm3VKviF5s5Z-O8xubwn_wltLkiMTb1q',
@@ -450,7 +449,7 @@ document.addEventListener('DOMContentLoaded', async function() {
           ]
         },
         {
-          title: 'yasser machat',
+          title: 'Yasser Machat',
           videos: [
             '1pdafxuoelJo7JnsBe4c4YvaATbq7GYTd',
             '1n2XmSLrmx-_kstOjNMz5re0269ylCpSv',
@@ -460,7 +459,7 @@ document.addEventListener('DOMContentLoaded', async function() {
           ]
         },
         {
-          title: "Mays' World",
+          title: "May's World",
           videos: [
             '1qjkc0iM2WUdlmZ08M9261KEFlEgg1CQe',
             '1BZ0wHPgq-cqZdRMj27n88Vx5oVzsflVJ',
@@ -470,6 +469,12 @@ document.addEventListener('DOMContentLoaded', async function() {
       ];
       const playlistsBySection = {
         'Shortform series': shortformPlaylists,
+        'Trailers & teasers': [
+          {
+            title: 'GroupaXion',
+            videos: ['1hJwQUyWQz11jWVtXr28q8JkFXc0rWNO2']
+          }
+        ],
         'Longform series': [
           {
             title: "May's World",
@@ -744,11 +749,11 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
     {
       const carouselSlides = [
-        { src: 'assets/wecom-co/carousel-01.png', alt: 'Wecom&Co Instagram carousel slide 1' },
-        { src: 'assets/wecom-co/carousel-02.png', alt: 'Wecom&Co Instagram carousel slide 2' },
-        { src: 'assets/wecom-co/carousel-03.png', alt: 'Wecom&Co Instagram carousel slide 3' },
-        { src: 'assets/wecom-co/carousel-04.png', alt: 'Wecom&Co Instagram carousel slide 4' },
-        { src: 'assets/wecom-co/carousel-05.png', alt: 'Wecom&Co Instagram carousel slide 5' }
+        { src: 'assets/wecom-co/carousel-01.png', alt: 'WeCom&Co Instagram carousel slide 1' },
+        { src: 'assets/wecom-co/carousel-02.png', alt: 'WeCom&Co Instagram carousel slide 2' },
+        { src: 'assets/wecom-co/carousel-03.png', alt: 'WeCom&Co Instagram carousel slide 3' },
+        { src: 'assets/wecom-co/carousel-04.png', alt: 'WeCom&Co Instagram carousel slide 4' },
+        { src: 'assets/wecom-co/carousel-05.png', alt: 'WeCom&Co Instagram carousel slide 5' }
       ];
       const campaignAssets = [
         { title: 'Premiere impression', src: 'assets/wecom-co/premiere-impression.png', alt: 'Premiere impression campaign visual', type: 'Graphic' },
@@ -773,14 +778,12 @@ document.addEventListener('DOMContentLoaded', async function() {
         { title: 'Module 1 — Maîtrise de la prospection téléphonique', type: 'Booklet', label: 'BOOKLET', ratio: '4 PAGES', meta: 'Training material', pages: 4, src: 'assets/prints/booklet-02-cover.png', file: 'assets/prints/booklet-02.pdf', driveId: '1oOLlU1AArnjuzaNY2T-2EvwuuJMeISTC' },
         { title: 'Module 3 — Soumission technique en rendez-vous stratégique', type: 'Booklet', label: 'BOOKLET', ratio: '8 PAGES', meta: 'Training material', pages: 8, src: 'assets/prints/booklet-03-cover.png', file: 'assets/prints/booklet-03.pdf', driveId: '1-ryzXXhaocLZ64Fv2oediSwWHsv5CWZB' },
         { title: 'Module 3 — Fiche mémo', type: 'Booklet', label: 'BOOKLET', ratio: '6 PAGES', meta: 'Training material', pages: 6, src: 'assets/prints/booklet-04-cover.png', file: 'assets/prints/booklet-04.pdf', driveId: '1Fq4ctMiRKMKvFUHjHyHrVxoq7u1gHV-I' },
-        { title: 'Roll-up', type: 'Roll-up', label: 'ROLL-UP', ratio: '1/2', meta: 'Large-format display', src: 'assets/prints/rollup-cover.png', file: 'assets/prints/rollup.pdf', driveId: '1gHM-KUdYPgBQy_vUlFnIdyaY7eSUnYcR' },
-        { title: 'Flag', type: 'Flag', label: 'FLAG', ratio: '1/5', meta: 'Large-format display', src: 'assets/prints/flag-cover.png', file: 'assets/prints/flag.pdf', driveId: '1roUz2tCKRVBL0UtfaLvt98DOUEyVJhvz' },
-        { title: 'Characters Poster', type: 'Poster', label: 'POSTER', ratio: '3/4', meta: 'Poster design', src: 'assets/prints/poster-01-cover.png', file: 'assets/prints/poster-01.pdf', driveId: '1zyxwQRZ6BdT3N6T7Onk4YO7etYItHRHp' },
-        { title: 'FC Poster', type: 'Poster', label: 'POSTER', ratio: '3/4', meta: 'Poster design', src: 'assets/prints/poster-02-cover.png', file: 'assets/prints/poster-02.pdf', driveId: '1oyhjG7_Tg6XKfC5xjstmP3_disVSbAJT' },
-        { title: 'Poster 03', type: 'Poster', label: 'POSTER', ratio: '3/4', meta: 'Poster design', src: 'assets/prints/poster-03-cover.png', file: 'assets/prints/poster-03.pdf', driveId: '1OPtsZRc6cVXgFT4SEsLGwHw-qWnipZPe' },
-        { title: 'PC avec abonnement', type: 'Pricing menu', label: 'MENU', ratio: '16/9', meta: 'Pricing menu', src: 'assets/prints/menu-01.png', file: 'assets/prints/menu-01.png', driveId: '1l3U1BpgSbPmSZvUpb_7IkqBevLEE_bqx' },
-        { title: 'PC hors abonnement', type: 'Pricing menu', label: 'MENU', ratio: '16/9', meta: 'Pricing menu', src: 'assets/prints/menu-02.png', file: 'assets/prints/menu-02.png', driveId: '10kxZfKOsuNBK3KxIn-UlYpieSRsBfWzJ' },
-        { title: 'PS5', type: 'Pricing menu', label: 'MENU', ratio: '16/9', meta: 'Pricing menu', src: 'assets/prints/menu-03.png', file: 'assets/prints/menu-03.png', driveId: '1ZFYvygvEBpWtYTVibu7GlmQgkD3glmL6' }
+        { title: 'WeCom&Co Roll-up', type: 'Roll-up', label: 'ROLL-UP', ratio: '1/2', meta: 'Large-format display', src: 'assets/prints/rollup-cover.png', file: 'assets/prints/rollup.pdf', driveId: '1gHM-KUdYPgBQy_vUlFnIdyaY7eSUnYcR' },
+        { title: 'WeCom&Co Flag', type: 'Flag', label: 'FLAG', ratio: '1/5', meta: 'Large-format display', src: 'assets/prints/flag-cover.png', file: 'assets/prints/flag.pdf', driveId: '1roUz2tCKRVBL0UtfaLvt98DOUEyVJhvz' },
+        { title: 'Gaming Factory Poster 1', type: 'Poster', label: 'POSTER', ratio: '3/4', meta: 'Poster design', src: 'assets/prints/poster-01-cover.png', file: 'assets/prints/poster-01.pdf', driveId: '1zyxwQRZ6BdT3N6T7Onk4YO7etYItHRHp' },
+        { title: 'Gaming Factory Poster 2', type: 'Poster', label: 'POSTER', ratio: '3/4', meta: 'Poster design', src: 'assets/prints/poster-02-cover.png', file: 'assets/prints/poster-02.pdf', driveId: '1oyhjG7_Tg6XKfC5xjstmP3_disVSbAJT' },
+        { title: 'Gaming Factory Poster 3', type: 'Poster', label: 'POSTER', ratio: '3/4', meta: 'Poster design', src: 'assets/prints/poster-03-cover.png', file: 'assets/prints/poster-03.pdf', driveId: '1OPtsZRc6cVXgFT4SEsLGwHw-qWnipZPe' },
+        { title: 'Gaming Factory Prices', type: 'Pricing menu', label: 'MENU', ratio: '16/9', meta: 'Menu Caroussel', src: 'assets/prints/menu-02.png', file: 'assets/prints/menu-02.png', driveId: '10kxZfKOsuNBK3KxIn-UlYpieSRsBfWzJ', slides: ['assets/prints/menu-02.png', 'assets/prints/menu-01.png', 'assets/prints/menu-03.png'], slideTitles: ['PC hors abonnement', 'PC avec abonnement', 'PS5'] }
       ];
       const galleryStyle = document.createElement('style');
       galleryStyle.textContent = `
@@ -1000,8 +1003,21 @@ document.addEventListener('DOMContentLoaded', async function() {
         .print-zoom-bar p { margin: 0; font-family: Archivo, sans-serif; font-size: 1rem; font-weight: 680; letter-spacing: -.03em; }
         .print-zoom-tools { display: flex; align-items: center; gap: 8px; }
         .print-zoom-tools button { min-width: 42px; height: 42px; padding: 0 12px; border: 0; border-radius: 999px; background: #f4f1ea; color: #141416; font: inherit; font-size: .95rem; font-weight: 700; cursor: pointer; }
-        .print-zoom-stage { min-height: 0; overflow: hidden; display: grid; place-items: center; }
+        .print-zoom-stage { position: relative; min-height: 0; overflow: hidden; display: grid; place-items: center; touch-action: pan-y; }
         .print-zoom-stage img { max-width: 94vw; max-height: calc(100vh - 84px); object-fit: contain; transform-origin: center center; user-select: none; -webkit-user-drag: none; }
+        .print-slide-nav { position: absolute; z-index: 1; top: 50%; display: grid; width: 48px; height: 48px; place-items: center; transform: translateY(-50%); border: 0; border-radius: 50%; background: rgba(244,241,234,.92); color: #141416; font: inherit; font-size: 2rem; line-height: 1; cursor: pointer; }
+        .print-slide-nav[hidden] { display: none !important; }
+        .print-slide-nav:disabled { opacity: .35; cursor: not-allowed; }
+        .print-slide-prev { left: 18px; }
+        .print-slide-next { right: 18px; }
+        .print-carousel-dots { position: absolute; z-index: 2; bottom: 18px; left: 50%; display: flex; gap: 8px; align-items: center; transform: translateX(-50%); }
+        .print-carousel-dot { width: 9px; height: 9px; padding: 0; border: 0; border-radius: 50%; background: rgba(244,241,234,.5); cursor: pointer; }
+        .print-carousel-dot[aria-current="true"] { background: #f4f1ea; }
+        .print-card-dots { position: absolute; z-index: 2; bottom: 12px; left: 50%; display: flex; gap: 5px; transform: translateX(-50%); pointer-events: none; }
+        .print-card-dots span { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,.55); box-shadow: 0 1px 5px rgba(0,0,0,.7); }
+        .print-card-dots span:first-child { background: #fff; }
+        #work .print-asset-project.is-carousel .print-project-cover { aspect-ratio: 16 / 9; background: transparent; }
+        #work .print-asset-project.is-carousel .print-project-cover img { object-fit: cover; padding: 0; }
         #work button.print-project-cover { width: 100%; padding: 0; border: 0; color: inherit; font: inherit; text-align: inherit; cursor: zoom-in; }
         .book-lightbox { position: fixed; inset: 0; z-index: 80; display: grid; place-items: center; padding: 24px; background: rgba(5,5,6,.9); }
         .book-lightbox[hidden] { display: none !important; }
@@ -1035,10 +1051,10 @@ document.addEventListener('DOMContentLoaded', async function() {
         <header class="wecom-dialog-header">
           <div>
             <p class="wecom-dialog-kicker">Client folder · Social &amp; campaign design</p>
-            <h2 id="wecom-gallery-title">wecom&amp;co</h2>
+            <h2 id="wecom-gallery-title">WeCom&amp;Co</h2>
             <p class="wecom-dialog-subtitle">A collection of social visuals, stories and motion.</p>
           </div>
-          <button class="wecom-dialog-close" type="button" aria-label="Close wecom&co folder">×</button>
+          <button class="wecom-dialog-close" type="button" aria-label="Close WeCom&Co folder">×</button>
         </header>
         <div class="wecom-gallery-body">
           <section class="wecom-carousel-panel" aria-label="Instagram carousel">
@@ -1382,7 +1398,12 @@ document.addEventListener('DOMContentLoaded', async function() {
             <button type="button" data-zoom="close" aria-label="Close">×</button>
           </div>
         </div>
-        <div class="print-zoom-stage"><img alt=""></div>`;
+        <div class="print-zoom-stage">
+          <button class="print-slide-nav print-slide-prev" type="button" data-print-slide="prev" aria-label="Previous post">‹</button>
+          <img alt="">
+          <button class="print-slide-nav print-slide-next" type="button" data-print-slide="next" aria-label="Next post">›</button>
+          <div class="print-carousel-dots" role="group" aria-label="Choose carousel post"></div>
+        </div>`;
       document.body.append(printPiece);
       const printZoomImage = printPiece.querySelector('img');
       const printZoomStage = printPiece.querySelector('.print-zoom-stage');
@@ -1390,6 +1411,9 @@ document.addEventListener('DOMContentLoaded', async function() {
       let printZoom = 1;
       let printPanX = 0;
       let printPanY = 0;
+      let activePrintSlides = null;
+      let activePrintSlide = 0;
+      let printSwipeStart = null;
       const applyPrintZoom = () => {
         printZoomImage.style.transform = `translate(${printPanX}px, ${printPanY}px) scale(${printZoom})`;
         printZoomLabel.textContent = `${Math.round(printZoom * 100)}%`;
@@ -1405,18 +1429,44 @@ document.addEventListener('DOMContentLoaded', async function() {
       };
       printPiece.addEventListener('click', (event) => {
         const action = event.target.closest('[data-zoom]');
-        if (!action) return;
-        if (action.dataset.zoom === 'in') setPrintZoom(printZoom + 0.25);
-        if (action.dataset.zoom === 'out') setPrintZoom(printZoom - 0.25);
-        if (action.dataset.zoom === 'reset') setPrintZoom(1);
-        if (action.dataset.zoom === 'close') printPiece.hidden = true;
+        if (action) {
+          if (action.dataset.zoom === 'in') setPrintZoom(printZoom + 0.25);
+          if (action.dataset.zoom === 'out') setPrintZoom(printZoom - 0.25);
+          if (action.dataset.zoom === 'reset') setPrintZoom(1);
+          if (action.dataset.zoom === 'close') printPiece.hidden = true;
+          return;
+        }
+        const slideAction = event.target.closest('[data-print-slide]');
+        if (slideAction && activePrintSlides) {
+          showPrintSlide(activePrintSlide + (slideAction.dataset.printSlide === 'next' ? 1 : -1));
+        }
+        const dot = event.target.closest('[data-print-dot]');
+        if (dot && activePrintSlides) showPrintSlide(Number(dot.dataset.printDot));
       });
+      const showPrintSlide = (index) => {
+        if (!activePrintSlides) return;
+        activePrintSlide = Math.max(0, Math.min(index, activePrintSlides.length - 1));
+        printZoomImage.src = activePrintSlides[activePrintSlide].src;
+        printZoomImage.alt = activePrintSlides[activePrintSlide].alt;
+        printPiece.querySelector('.print-zoom-bar p').textContent =
+          `${printPiece.dataset.title} · ${activePrintSlide + 1} / ${activePrintSlides.length}`;
+        printPiece.querySelector('.print-slide-prev').disabled = activePrintSlide === 0;
+        printPiece.querySelector('.print-slide-next').disabled = activePrintSlide === activePrintSlides.length - 1;
+        printPiece.querySelectorAll('.print-carousel-dot').forEach((dot, dotIndex) => {
+          if (dotIndex === activePrintSlide) dot.setAttribute('aria-current', 'true');
+          else dot.removeAttribute('aria-current');
+        });
+        setPrintZoom(1);
+      };
       printZoomStage.addEventListener('wheel', (event) => {
         event.preventDefault();
         setPrintZoom(printZoom + (event.deltaY < 0 ? 0.15 : -0.15));
       }, { passive: false });
       let printDrag = null;
       printZoomStage.addEventListener('pointerdown', (event) => {
+        if (activePrintSlides && printZoom === 1 && !event.target.closest('button')) {
+          printSwipeStart = { x: event.clientX, y: event.clientY };
+        }
         if (printZoom <= 1 || event.target.closest('button')) return;
         printDrag = { x: event.clientX - printPanX, y: event.clientY - printPanY };
         printZoomStage.setPointerCapture(event.pointerId);
@@ -1434,11 +1484,46 @@ document.addEventListener('DOMContentLoaded', async function() {
       };
       printZoomStage.addEventListener('pointerup', endPrintDrag);
       printZoomStage.addEventListener('pointercancel', endPrintDrag);
+      printZoomStage.addEventListener('pointerup', (event) => {
+        if (!printSwipeStart || !activePrintSlides) return;
+        const deltaX = event.clientX - printSwipeStart.x;
+        const deltaY = event.clientY - printSwipeStart.y;
+        printSwipeStart = null;
+        if (Math.abs(deltaX) < 45 || Math.abs(deltaX) <= Math.abs(deltaY)) return;
+        showPrintSlide(activePrintSlide + (deltaX < 0 ? 1 : -1));
+      });
+      printZoomStage.addEventListener('pointercancel', () => { printSwipeStart = null; });
+      printPiece.addEventListener('keydown', (event) => {
+        if (!activePrintSlides) return;
+        if (event.key === 'ArrowLeft') showPrintSlide(activePrintSlide - 1);
+        if (event.key === 'ArrowRight') showPrintSlide(activePrintSlide + 1);
+      });
       const openPrintPiece = (asset) => {
-        printZoomImage.src = asset.src;
-        printZoomImage.alt = asset.title;
-        printPiece.querySelector('.print-zoom-bar p').textContent = asset.title;
-        setPrintZoom(1);
+        activePrintSlides = Array.isArray(asset.slides)
+          ? asset.slides.map((src, index) => ({ src, alt: asset.slideTitles[index] }))
+          : null;
+        activePrintSlide = 0;
+        printPiece.dataset.title = asset.title;
+        if (activePrintSlides) {
+          printPiece.querySelectorAll('.print-slide-nav').forEach((button) => { button.hidden = false; });
+          const dots = printPiece.querySelector('.print-carousel-dots');
+          dots.replaceChildren(...activePrintSlides.map((slide, index) => {
+            const dot = document.createElement('button');
+            dot.type = 'button';
+            dot.className = 'print-carousel-dot';
+            dot.dataset.printDot = String(index);
+            dot.setAttribute('aria-label', `Show ${slide.alt}`);
+            return dot;
+          }));
+          showPrintSlide(0);
+        } else {
+          printPiece.querySelectorAll('.print-slide-nav').forEach((button) => { button.hidden = true; });
+          printPiece.querySelector('.print-carousel-dots').replaceChildren();
+          printZoomImage.src = asset.src;
+          printZoomImage.alt = asset.title;
+          printPiece.querySelector('.print-zoom-bar p').textContent = asset.title;
+          setPrintZoom(1);
+        }
         printPiece.hidden = false;
       };
 
@@ -1602,7 +1687,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         'Shortform series': 3,
         'Trailers & teasers': 2,
         Logos: 4,
-        Prints: 12,
+        Prints: 10,
         Posts: 1
       };
       const mountPrintsCollection = () => {
@@ -1652,9 +1737,10 @@ document.addEventListener('DOMContentLoaded', async function() {
           projects.classList.add('print-wall');
           printAssets.forEach((asset) => {
             const menu = asset.type === 'Pricing menu';
-            const contain = asset.type === 'Roll-up' || asset.type === 'Flag' || menu;
+            const carousel = Array.isArray(asset.slides);
+            const contain = asset.type === 'Roll-up' || asset.type === 'Flag' || (menu && !carousel);
             const project = document.createElement('article');
-            project.className = 'project print-asset-project ' + (menu ? 'span-4' : 'span-3') + (contain ? ' is-contain' : '');
+            project.className = 'project print-asset-project ' + (menu ? 'span-4' : 'span-3') + (contain ? ' is-contain' : '') + (carousel ? ' is-carousel' : '');
             project.dataset.printAsset = asset.file;
             project.dataset.printViewer = 'wall';
             const cover = document.createElement('button');
@@ -1671,6 +1757,13 @@ document.addEventListener('DOMContentLoaded', async function() {
             preview.loading = 'lazy';
             preview.decoding = 'async';
             cover.append(preview);
+            if (carousel) {
+              const dots = document.createElement('span');
+              dots.className = 'print-card-dots';
+              dots.setAttribute('aria-hidden', 'true');
+              asset.slides.forEach(() => dots.append(document.createElement('span')));
+              cover.append(dots);
+            }
             const details = document.createElement('div');
             details.className = 'project-details';
             const title = document.createElement('h3');
@@ -1771,7 +1864,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         folder.innerHTML = `
           <div class="wecom-folder-copy">
             <div class="wecom-folder-kicker">A social design collection</div>
-            <h3>wecom&amp;co</h3>
+            <h3>WeCom&amp;Co</h3>
             <p>Campaign visuals, Instagram stories and motion, gathered together in one place.</p>
             <div class="wecom-folder-actions">
               <button class="wecom-folder-open" type="button">Open folder <span aria-hidden="true">↗</span></button>
