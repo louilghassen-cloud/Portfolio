@@ -798,7 +798,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         .logo-drive-slot { position: absolute; inset: 0; z-index: 1; }
         .logo-drive-slot.is-off { display: none; }
         .logo-drive-preview { position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; border: 0; }
-        .client-player, .logo-drive-slot, .wecom-asset-visual, .wecom-post-media { position: relative; overflow: hidden; }
+        .client-player, .wecom-asset-visual, .wecom-post-media { position: relative; overflow: hidden; }
         .client-player iframe[src*="drive.google.com"],
         .logo-drive-slot iframe[src*="drive.google.com"],
         .wecom-asset-visual iframe[src*="drive.google.com"],
@@ -997,14 +997,14 @@ document.addEventListener('DOMContentLoaded', async function() {
         .logo-lightbox img { display: block; width: 100%; height: min(70vh, 720px); object-fit: contain; }
         .logo-lightbox p { margin: 16px 0 0; font-family: Archivo, sans-serif; font-size: 1.15rem; font-weight: 760; letter-spacing: -.04em; }
         .logo-lightbox-close { position: absolute; top: 14px; right: 14px; width: 40px; height: 40px; border: 0; border-radius: 50%; background: #141416; color: #f4f1ea; font-size: 1.4rem; line-height: 1; cursor: pointer; }
-        .print-zoom { position: fixed; inset: 0; z-index: 80; display: grid; grid-template-rows: auto minmax(0, 1fr); background: rgba(5,5,6,.92); }
+        .print-zoom { position: fixed; inset: 0; z-index: 80; display: grid; grid-template-rows: auto minmax(0, 1fr); justify-items: center; padding: 14px 20px 20px; background: rgba(5,5,6,.92); }
         .print-zoom[hidden] { display: none !important; }
-        .print-zoom-bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 18px; color: #f4f1ea; }
+        .print-zoom-bar { display: flex; width: min(100%, 1100px); align-items: center; justify-content: space-between; gap: 16px; padding: 14px 18px; color: #f4f1ea; }
         .print-zoom-bar p { margin: 0; font-family: Archivo, sans-serif; font-size: 1rem; font-weight: 680; letter-spacing: -.03em; }
         .print-zoom-tools { display: flex; align-items: center; gap: 8px; }
         .print-zoom-tools button { min-width: 42px; height: 42px; padding: 0 12px; border: 0; border-radius: 999px; background: #f4f1ea; color: #141416; font: inherit; font-size: .95rem; font-weight: 700; cursor: pointer; }
-        .print-zoom-stage { position: relative; min-height: 0; overflow: hidden; display: grid; place-items: center; touch-action: pan-y; }
-        .print-zoom-stage img { max-width: 94vw; max-height: calc(100vh - 84px); object-fit: contain; transform-origin: center center; user-select: none; -webkit-user-drag: none; }
+        .print-zoom-stage { position: relative; width: min(100%, 1100px); min-height: 0; overflow: hidden; display: grid; place-items: center; touch-action: pan-y; }
+        .print-zoom-stage img { width: min(82vw, 900px); height: min(72vh, 720px); max-width: 100%; max-height: 100%; object-fit: contain; transform-origin: center center; user-select: none; -webkit-user-drag: none; }
         .print-slide-nav { position: absolute; z-index: 1; top: 50%; display: grid; width: 48px; height: 48px; place-items: center; transform: translateY(-50%); border: 0; border-radius: 50%; background: rgba(244,241,234,.92); color: #141416; font: inherit; font-size: 2rem; line-height: 1; cursor: pointer; }
         .print-slide-nav[hidden] { display: none !important; }
         .print-slide-nav:disabled { opacity: .35; cursor: not-allowed; }
@@ -1016,6 +1016,15 @@ document.addEventListener('DOMContentLoaded', async function() {
         .print-card-dots { position: absolute; z-index: 2; bottom: 12px; left: 50%; display: flex; gap: 5px; transform: translateX(-50%); pointer-events: none; }
         .print-card-dots span { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,.55); box-shadow: 0 1px 5px rgba(0,0,0,.7); }
         .print-card-dots span:first-child { background: #fff; }
+        @media (max-width: 600px) {
+          .print-zoom { padding: 8px; }
+          .print-zoom-bar { padding: 10px 4px; }
+          .print-zoom-tools { gap: 5px; }
+          .print-zoom-tools button { min-width: 38px; height: 38px; padding: 0 9px; }
+          .print-zoom-stage img { width: 94vw; height: 70vh; }
+          .print-slide-prev { left: 6px; }
+          .print-slide-next { right: 6px; }
+        }
         #work .print-asset-project.is-carousel .print-project-cover { aspect-ratio: 16 / 9; background: transparent; }
         #work .print-asset-project.is-carousel .print-project-cover img { object-fit: cover; padding: 0; }
         #work button.print-project-cover { width: 100%; padding: 0; border: 0; color: inherit; font: inherit; text-align: inherit; cursor: zoom-in; }
@@ -1978,6 +1987,12 @@ document.addEventListener('DOMContentLoaded', async function() {
         openLogo(id, slot.dataset.driveTitle || project.querySelector('h3')?.textContent.trim() || 'Logo');
       }, true);
       const mountDriveSlots = () => {
+        const logoTitlesByDriveId = {
+          '1_e9RFlLTFzRtftEkJyiOkZNUJLiiIxmQ': 'Yasmine Coiff',
+          '1TwS4YnCQfzGKn2SL5L7HTNpAI2jHZADr': 'GAIA Eco Club',
+          '1ObPWcYK94oVwaVTOFoB0DeaOC_TdD7Aw': 'Industriel Alliance Agence Brossard',
+          '1KBnDIUEqJpNlHtJcn6k45ierG6AXyhZ9': 'Benoit Gosselin'
+        };
         document.querySelectorAll('#work .logo-drive-slot').forEach((slot) => {
           const id = (slot.dataset.driveId || '').trim();
           const isLogo = !!slot.closest('.cover.square');
@@ -1988,19 +2003,30 @@ document.addEventListener('DOMContentLoaded', async function() {
             return;
           }
           if (isLogo) {
-            if (slot.dataset.filled === id && slot.dataset.mode === 'logo') return;
-            const button = document.createElement('button');
-            button.type = 'button';
-            button.className = 'logo-open';
-            button.setAttribute('aria-label', `Enlarge ${slot.dataset.driveTitle || 'logo'}`);
+            const title = logoTitlesByDriveId[id];
+            const project = slot.closest('.project');
+            if (title) {
+              slot.dataset.driveTitle = title;
+              const heading = project?.querySelector('.project-details h3');
+              if (heading) heading.textContent = title;
+            }
+            const button = slot.querySelector('.logo-open');
+            if (slot.dataset.filled === id && slot.dataset.mode === 'logo') {
+              if (button) button.setAttribute('aria-label', `Enlarge ${slot.dataset.driveTitle || 'logo'}`);
+              return;
+            }
+            const logoButton = document.createElement('button');
+            logoButton.type = 'button';
+            logoButton.className = 'logo-open';
+            logoButton.setAttribute('aria-label', `Enlarge ${slot.dataset.driveTitle || 'logo'}`);
             const image = document.createElement('img');
             image.className = 'logo-drive-preview';
             image.alt = '';
             image.decoding = 'async';
             image.src = logoThumb(id);
-            button.append(image);
-            button.addEventListener('click', () => openLogo(id, slot.dataset.driveTitle || 'Logo'));
-            slot.replaceChildren(button);
+            logoButton.append(image);
+            logoButton.addEventListener('click', () => openLogo(id, slot.dataset.driveTitle || 'Logo'));
+            slot.replaceChildren(logoButton);
             slot.dataset.filled = id;
             slot.dataset.mode = 'logo';
             return;
