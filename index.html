@@ -414,28 +414,11 @@ document.addEventListener('DOMContentLoaded', async function() {
     // createElement so they execute, awaiting onload for src scripts to
     // preserve ordering (React before ReactDOM before Babel before text/babel).
     const doc = new DOMParser().parseFromString(template, 'text/html');
-    const showreelCard = doc.querySelector('#top .grow');
-    if (showreelCard) {
-      showreelCard.replaceChildren();
-      showreelCard.style.cssText = 'background: transparent; border: 0; padding: 0; border-radius: 0; box-shadow: none; width: 100%; height: auto;';
-
-      const video = doc.createElement('video');
-      video.className = 'showreel';
-      video.src = 'showreel.mp4';
-      video.controls = true;
-      video.loop = false;
-      video.autoplay = true;
-      video.muted = true;
-      video.defaultMuted = true;
-      video.playsInline = true;
-      video.preload = 'auto';
-      video.setAttribute('autoplay', '');
-      video.setAttribute('muted', '');
-      video.setAttribute('playsinline', '');
-      video.title = 'Showreel';
-      video.style.cssText = 'display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: contain; background: transparent; border: 0; border-radius: 0;';
-      showreelCard.append(video);
-    }
+      const showreelCard = doc.querySelector('#top .grow');
+      if (showreelCard) {
+        showreelCard.replaceChildren();
+        showreelCard.style.cssText = 'background: transparent; border: 0; padding: 0; border-radius: 0; box-shadow: none; width: 100%; height: auto;';
+      }
     document.documentElement.replaceWith(doc.documentElement);
     {
       const shortformPlaylists = [
@@ -465,6 +448,10 @@ document.addEventListener('DOMContentLoaded', async function() {
             '1BZ0wHPgq-cqZdRMj27n88Vx5oVzsflVJ',
             '1qSRdzUNrjqayOYOovGpZypSyn2w9VjFG'
           ]
+        },
+        {
+          title: 'Showreel',
+          videos: ['file:showreel.mp4']
         }
       ];
       const playlistsBySection = {
@@ -499,13 +486,73 @@ document.addEventListener('DOMContentLoaded', async function() {
           }
         ]
       };
+      const heroPool = [
+        ...playlistsBySection['Longform series'].flatMap((playlist) => playlist.videos),
+        ...playlistsBySection['Shortform series'].flatMap((playlist) => playlist.videos)
+      ];
+      const heroId = heroPool[Math.floor(Math.random() * heroPool.length)];
+      const heroCard = document.querySelector('#top .grow');
+      if (heroCard) {
+        heroCard.replaceChildren();
+        const shellStyle = 'display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; background: #080809; border: 0; border-radius: 0;';
+        const heroIsFile = heroId.startsWith('file:');
+        const heroIsYouTube = heroId.startsWith('youtube:');
+        if (!heroIsYouTube) {
+          const video = document.createElement('video');
+          video.className = 'showreel';
+          video.src = heroIsFile ? heroId.slice('file:'.length) : `/drive/${heroId}`;
+          video.controls = true;
+          video.loop = false;
+          video.autoplay = true;
+          video.muted = true;
+          video.defaultMuted = true;
+          video.playsInline = true;
+          video.preload = 'auto';
+          video.volume = 0.2;
+          video.setAttribute('autoplay', '');
+          video.setAttribute('playsinline', '');
+          video.title = 'Showreel';
+          video.style.cssText = shellStyle + ' object-fit: contain;';
+          heroCard.append(video);
+          video.muted = false;
+          const pendingHero = video.play();
+          if (pendingHero && typeof pendingHero.catch === 'function') {
+            pendingHero.catch(() => {
+              video.muted = true;
+              video.play().catch(() => {});
+            });
+          }
+        } else {
+          const frame = document.createElement('iframe');
+          frame.className = 'showreel';
+          const youtubeId = heroId.slice('youtube:'.length);
+          frame.dataset.heroSrc = `https://www.youtube.com/embed/${youtubeId}?enablejsapi=1&autoplay=1&playsinline=1&rel=0`;
+          frame.src = frame.dataset.heroSrc;
+          frame.allow = 'autoplay; encrypted-media; fullscreen; picture-in-picture';
+          frame.allowFullscreen = true;
+          frame.title = 'Showreel';
+          frame.style.cssText = shellStyle;
+          frame.addEventListener('load', () => {
+            const command = (func, args) => frame.contentWindow?.postMessage(JSON.stringify({ event: 'command', func, args }), '*');
+            command('setVolume', [20]);
+            command('unMute', []);
+            command('playVideo', []);
+          });
+          heroCard.append(frame);
+        }
+      }
       const style = document.createElement('style');
       style.textContent = `
         .cover.trailer-player::before { display: none; }
         #work .projects.client-browser { display: block; }
         #work .projects.client-browser > :not(.client-browser-panel) { display: none !important; }
+        #work.series-pending .projects > :not(.client-browser-panel) { display: none !important; }
+        #work .series-section .projects:not(.client-browser) > :not(.client-browser-panel) { display: none !important; }
         .client-browser-panel { display: grid; gap: 18px; }
         .client-switch { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+        .client-switch.is-wide { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+        .client-player video { display: block; width: 100%; height: 100%; object-fit: contain; background: #080809; }
+        .client-player:has(video)::after { display: none; }
         .client-tab { display: flex; align-items: center; gap: 12px; min-width: 0; min-height: 72px; padding: 14px 16px; border: 1px solid rgba(245,245,240,.12); border-radius: 16px; background: #141416; color: #F5F5F0; font: inherit; text-align: left; cursor: pointer; transition: border-color .18s ease, background .18s ease, color .18s ease, transform .18s ease; }
         .client-tab:hover { border-color: rgba(198,244,50,.45); transform: translateY(-1px); }
         .client-tab[aria-pressed="true"] { border-color: #C6F432; background: #C6F432; color: #0B0B0C; }
@@ -523,7 +570,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         .client-video[aria-pressed="true"] { border-color: #C6F432; background: #C6F432; color: #0B0B0C; }
         @media (prefers-reduced-motion: reduce) { .client-tab, .client-video { transition: none; } }
         @media (max-width: 800px) {
-          .client-switch { grid-template-columns: 1fr; }
+          .client-switch, .client-switch.is-wide { grid-template-columns: 1fr; }
           .client-tab { min-height: 62px; }
         }
       `;
@@ -585,11 +632,29 @@ document.addEventListener('DOMContentLoaded', async function() {
           renderPlaylists();
         }));
       };
+      const seriesSectionNames = new Set(['Longform series', 'Shortform series', 'Séries longues', 'Séries courtes']);
       document.addEventListener('click', (event) => {
         const target = event.target;
-        const sectionButton = target instanceof Element && target.closest('#work .work-filters .tab');
-        if (sectionButton) savePlaylistState({ section: sectionButton.textContent.trim() });
-        if (target instanceof Element && target.closest('.playlist-card, .playlist-carousel-controls, .client-browser-panel')) return;
+        if (!(target instanceof Element)) return;
+        const filterButton = target.closest('#work .work-filters .tab');
+        const workTab = target.closest('#work .work-tabs .tab');
+        if (!filterButton && !workTab) return;
+        const work = document.querySelector('#work');
+        const pressedFormat = document.querySelector('#work .work-filters .tab[aria-pressed="true"]');
+        const pressedLabel = pressedFormat ? pressedFormat.textContent.trim() : '';
+        let openingSeries = false;
+        if (filterButton) {
+          const label = filterButton.textContent.trim();
+          savePlaylistState({ section: label });
+          if (filterButton.getAttribute('aria-pressed') === 'true') return;
+          openingSeries = seriesSectionNames.has(label);
+        } else {
+          const tab = workTab.textContent.trim();
+          if (tab === 'Design') openingSeries = false;
+          else if (tab === 'Video' || tab === 'Vidéo') openingSeries = !['Trailers & teasers', 'Bandes-annonces et teasers'].includes(pressedLabel);
+          else openingSeries = seriesSectionNames.has(pressedLabel);
+        }
+        work?.classList.toggle('series-pending', openingSeries);
         if (restorePlaylists) {
           suppressPlaylistRender = true;
           restorePlaylists();
@@ -664,17 +729,13 @@ document.addEventListener('DOMContentLoaded', async function() {
         const panel = document.createElement('article');
         panel.className = 'client-browser-panel' + (isShort ? ' is-short' : '');
         const switcher = document.createElement('div');
-        switcher.className = 'client-switch';
+        switcher.className = 'client-switch' + (playlists.length > 3 ? ' is-wide' : '');
         switcher.setAttribute('role', 'tablist');
         switcher.setAttribute('aria-label', french ? 'Clients' : 'Clients');
         const stage = document.createElement('div');
         stage.className = 'client-stage';
         const player = document.createElement('div');
         player.className = 'client-player';
-        const frame = document.createElement('iframe');
-        frame.loading = 'lazy';
-        frame.allow = 'autoplay; encrypted-media; fullscreen; picture-in-picture';
-        player.append(frame);
         const now = document.createElement('p');
         now.className = 'client-now';
         const videoRow = document.createElement('div');
@@ -691,11 +752,50 @@ document.addEventListener('DOMContentLoaded', async function() {
         let activeVideo = Number.isInteger(sectionProgress.videoIndex) ? sectionProgress.videoIndex : 0;
         const clientButtons = [];
 
-        const show = () => {
+        const show = (shouldPlay = false) => {
           const playlist = playlists[activeClient];
           activeVideo = Math.max(0, Math.min(activeVideo, playlist.videos.length - 1));
-          frame.src = videoSrc(playlist.videos[activeVideo]);
-          frame.title = `${playlist.title} — ${noun} ${activeVideo + 1}`;
+          const clipId = playlist.videos[activeVideo];
+          const clipTitle = `${playlist.title} — ${noun} ${activeVideo + 1}`;
+          player.replaceChildren();
+          const startAudible = (clip) => {
+            clip.volume = 0.2;
+            clip.muted = false;
+            const pending = clip.play();
+            if (pending && typeof pending.catch === 'function') {
+              pending.catch(() => {
+                clip.muted = true;
+                clip.play().catch(() => {});
+              });
+            }
+          };
+          if (!clipId.startsWith('youtube:')) {
+            const clip = document.createElement('video');
+            clip.src = clipId.startsWith('file:') ? clipId.slice('file:'.length) : `/drive/${clipId}`;
+            clip.controls = true;
+            clip.autoplay = false;
+            clip.playsInline = true;
+            clip.preload = shouldPlay ? 'auto' : 'none';
+            clip.title = clipTitle;
+            player.append(clip);
+            if (shouldPlay) startAudible(clip);
+          } else {
+            const frame = document.createElement('iframe');
+            const youtubeId = clipId.slice('youtube:'.length);
+            frame.src = `https://www.youtube.com/embed/${youtubeId}?enablejsapi=1&autoplay=${shouldPlay ? 1 : 0}&playsinline=1&rel=0`;
+            frame.title = clipTitle;
+            frame.allow = 'autoplay; encrypted-media; fullscreen; picture-in-picture';
+            frame.allowFullscreen = true;
+            if (shouldPlay) {
+              frame.addEventListener('load', () => {
+                const command = (func, args) => frame.contentWindow?.postMessage(JSON.stringify({ event: 'command', func, args }), '*');
+                command('setVolume', [20]);
+                command('unMute', []);
+                command('playVideo', []);
+              });
+            }
+            player.append(frame);
+          }
           now.textContent = `${playlist.title} · ${noun} ${String(activeVideo + 1).padStart(2, '0')}`;
           clientButtons.forEach((button, index) => button.setAttribute('aria-pressed', index === activeClient ? 'true' : 'false'));
           videoRow.replaceChildren();
@@ -709,7 +809,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             button.textContent = String(index + 1).padStart(2, '0');
             button.addEventListener('click', () => {
               activeVideo = index;
-              show();
+              show(true);
               savePlaylistProgress(sectionTitle, { playlistIndex: activeClient, videoIndex: activeVideo });
             });
             videoRow.append(button);
@@ -735,7 +835,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             if (activeClient === index) return;
             activeClient = index;
             activeVideo = 0;
-            show();
+            show(true);
             savePlaylistProgress(sectionTitle, { playlistIndex: activeClient, videoIndex: 0 });
           });
           clientButtons.push(button);
@@ -743,7 +843,16 @@ document.addEventListener('DOMContentLoaded', async function() {
         });
         show();
       };
-      const playlistObserver = new MutationObserver(schedulePlaylistRender);
+      const markSeriesSections = () => {
+        document.querySelectorAll('#work .work-section').forEach((section) => {
+          const title = section.querySelector('h2')?.textContent.trim() || '';
+          section.classList.toggle('series-section', seriesSectionNames.has(title));
+        });
+      };
+      const playlistObserver = new MutationObserver(() => {
+        markSeriesSections();
+        schedulePlaylistRender();
+      });
       playlistObserver.observe(document.documentElement, { childList: true, subtree: true });
       schedulePlaylistRender();
     }
@@ -759,7 +868,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         { title: 'Premiere impression', src: 'assets/wecom-co/premiere-impression.png', alt: 'Premiere impression campaign visual', type: 'Graphic' },
         { title: 'Impots', src: 'assets/wecom-co/impots.png', alt: 'Impots campaign visual', type: 'Graphic' },
         { title: 'Instagramvers', src: 'assets/wecom-co/instagramvers.png', alt: 'Instagramvers campaign visual', type: 'Graphic' },
-        { title: 'GIF Insta', driveId: '17pt2nKjHCccOHkpQ-tngSlvxNqV4WpcC', alt: 'GIF Insta motion post', type: 'Video' },
+        { title: 'GIF Insta', src: 'assets/wecom-co/gif-insta.mp4', alt: 'GIF Insta motion post', type: 'Video' },
         { title: 'Story example', src: 'assets/wecom-co/story-example.png', alt: 'Instagram story example', type: 'Story' },
         { title: 'Chien', src: 'assets/wecom-co/chien.png', alt: 'Chien campaign visual', type: 'Graphic' },
         { title: 'Recruitement 01', src: 'assets/wecom-co/recruitement-1.png', alt: 'Recruitement campaign visual 1', type: 'Story' },
@@ -800,9 +909,21 @@ document.addEventListener('DOMContentLoaded', async function() {
         .logo-drive-preview { position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; border: 0; }
         .client-player, .wecom-asset-visual, .wecom-post-media { position: relative; overflow: hidden; }
         .client-player iframe[src*="drive.google.com"],
-        .logo-drive-slot iframe[src*="drive.google.com"],
         .wecom-asset-visual iframe[src*="drive.google.com"],
         .wecom-post-media iframe[src*="drive.google.com"] { position: absolute; top: -54px; left: 0; width: calc(100% + 68px); height: calc(100% + 68px); max-width: none; max-height: none; border: 0; transform: none; }
+        .drive-play { position: absolute; inset: 0; z-index: 3; border: 0; background: linear-gradient(to top, rgba(0,0,0,.28), transparent 46%); cursor: pointer; }
+        #work .cover:not(.square) .logo-drive-preview { pointer-events: none; object-fit: cover; }
+        .drive-play span { position: absolute; left: 50%; top: 50%; width: 68px; height: 68px; border-radius: 50%; background: rgba(8,8,9,.78); transform: translate(-50%, -50%); }
+        .drive-play span::before { content: ""; position: absolute; left: 27px; top: 22px; border-style: solid; border-width: 12px 0 12px 18px; border-color: transparent transparent transparent #fff; }
+        .trailer-lightbox { position: fixed; inset: 0; z-index: 80; display: grid; place-items: center; align-content: center; gap: 14px; padding: 28px; background: rgba(5,5,6,.9); }
+        .trailer-lightbox[hidden] { display: none !important; }
+        .trailer-frame { position: relative; overflow: hidden; border-radius: 16px; background: #000; width: min(96vw, 1100px); aspect-ratio: 16 / 9; }
+        .trailer-frame.is-portrait { width: min(92vw, 430px); aspect-ratio: 9 / 16; }
+        .trailer-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+        .trailer-frame::after,
+        .client-player::after { content: ""; position: absolute; z-index: 5; top: 0; right: 0; width: 52px; height: 48px; background: #0a0a0b; pointer-events: auto; }
+        .trailer-lightbox p { margin: 0; color: #f4f1ea; font-family: Archivo, sans-serif; font-size: 1rem; font-weight: 680; }
+        .trailer-close { position: absolute; top: 18px; right: 18px; width: 42px; height: 42px; border: 0; border-radius: 50%; background: #141416; color: #f4f1ea; font-size: 1.4rem; cursor: pointer; }
         .logo-drive-cover .work-label { z-index: 2; }
         .wecom-folder-project, .aiesec-folder-project {
           grid-column: 1 / -1 !important;
@@ -841,7 +962,29 @@ document.addEventListener('DOMContentLoaded', async function() {
         .wecom-folder-project:hover .wecom-folder-stack img:nth-child(1), .aiesec-folder-project:hover .wecom-folder-stack img:nth-child(1) { transform: rotate(-16deg) translate(-5px, 4px); }
         .wecom-folder-project:hover .wecom-folder-stack img:nth-child(2), .aiesec-folder-project:hover .wecom-folder-stack img:nth-child(2) { transform: rotate(0) translateY(-9px); }
         .wecom-folder-project:hover .wecom-folder-stack img:nth-child(3), .aiesec-folder-project:hover .wecom-folder-stack img:nth-child(3) { transform: rotate(16deg) translate(5px, 4px); }
-        .wecom-dialog { width: 100vw; max-width: none; height: 100vh; max-height: none; margin: 0; padding: 0; overflow: auto; border: 0; border-radius: 0; background: #0b0b0c; color: #F5F5F0; font-family: Archivo, sans-serif; }
+        .wecom-dialog { width: min(1080px, calc(100vw - 36px)); max-width: none; height: auto; max-height: min(86vh, 860px); margin: auto; padding: 0; overflow: auto; border: 1px solid rgba(245,245,240,.12); border-radius: 24px; background: #0b0b0c; color: #F5F5F0; font-family: Archivo, sans-serif; }
+        .aiesec-dialog { overflow: hidden; overscroll-behavior: none; }
+        html:has(.aiesec-dialog[open]), html:has(.aiesec-dialog[open]) body { overflow: hidden; }
+        .wecom-dialog:not(.aiesec-dialog) { display: flex; flex-direction: column; height: min(88vh, 860px); overflow: hidden; }
+        .wecom-dialog:not(.aiesec-dialog) .wecom-dialog-shell { display: flex; flex-direction: column; flex: 1; min-height: 0; overflow: hidden; }
+        .wecom-dialog:not(.aiesec-dialog) .wecom-gallery-body { display: flex; flex: 1; min-height: 0; overflow: hidden; padding-top: 18px; }
+        .wecom-dialog:not(.aiesec-dialog) .wecom-assets-grid { flex: 1; min-height: 0; grid-template-columns: repeat(5, minmax(0, 1fr)); grid-template-rows: repeat(3, minmax(0, 1fr)); gap: 14px 12px; }
+        .wecom-dialog:not(.aiesec-dialog) .wecom-asset-tile { display: flex; flex-direction: column; height: 100%; min-height: 0; overflow: visible; border-radius: 0; }
+        .wecom-dialog:not(.aiesec-dialog) .wecom-asset-visual { flex: 1; aspect-ratio: auto; max-height: none; min-height: 0; }
+        .wecom-dialog:not(.aiesec-dialog) .wecom-asset-caption { flex: 0 0 auto; padding: 8px 1px 0; }
+        .wecom-video-open { position: relative; display: block; width: 100%; height: 100%; padding: 0; border: 0; background: #000; cursor: pointer; }
+        .wecom-video-open video { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+        .wecom-video-play { position: absolute; left: 50%; top: 50%; width: 46px; height: 46px; border-radius: 50%; background: rgba(8,8,9,.78); transform: translate(-50%, -50%); }
+        .wecom-video-play::before { content: ""; position: absolute; left: 18px; top: 14px; border-style: solid; border-width: 9px 0 9px 14px; border-color: transparent transparent transparent #fff; }
+        .wecom-video-zoom .print-zoom-stage video { width: min(86vw, 460px); max-height: 78vh; border-radius: 18px; background: #000; object-fit: contain; }
+        @media (max-width: 760px) {
+          .wecom-dialog:not(.aiesec-dialog) .wecom-assets-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: repeat(5, minmax(0, 1fr)); }
+        }
+        @media (max-width: 560px) {
+          .wecom-dialog:not(.aiesec-dialog) .wecom-gallery-body { overflow: auto; overscroll-behavior: contain; }
+          .wecom-dialog:not(.aiesec-dialog) .wecom-assets-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: none; }
+          .wecom-dialog:not(.aiesec-dialog) .wecom-asset-visual { aspect-ratio: 1; height: auto; }
+        }
         .wecom-dialog[open] { animation: folderIn .35s ease; }
         .wecom-dialog[open] .wecom-asset-tile { animation: tileRise .6s cubic-bezier(.2,.8,.2,1) both; }
         .wecom-dialog[open] .wecom-asset-tile:nth-child(2) { animation-delay: .05s; }
@@ -889,9 +1032,9 @@ document.addEventListener('DOMContentLoaded', async function() {
         .wecom-assets-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px 18px; }
         .wecom-asset-tile { min-width: 0; overflow: hidden; border: 0; border-radius: 18px; background: transparent; }
         .wecom-asset-tile:hover .wecom-asset-visual { transform: translateY(-4px); }
-        .wecom-asset-visual { display: grid; min-height: 0; aspect-ratio: 4 / 5; place-items: center; overflow: hidden; border-radius: 18px; background: #141416; transition: transform .35s ease; }
+        .wecom-asset-visual { display: grid; min-height: 0; aspect-ratio: 4 / 5; max-height: 280px; place-items: center; overflow: hidden; border-radius: 18px; background: #141416; transition: transform .35s ease; }
         .wecom-asset-visual img, .wecom-asset-visual video, .wecom-asset-visual iframe { display: block; width: 100%; height: 100%; max-height: none; border: 0; object-fit: contain; }
-        .wecom-asset-view { display: none; }
+        .wecom-asset-view { display: none !important; }
         .wecom-asset-visual iframe { min-height: 170px; background: #000; }
         .print-book-cover { width: 100%; height: 100%; padding: 0; border: 0; background: none; cursor: pointer; }
         .wecom-asset-visual img[role="button"] { cursor: zoom-in; }
@@ -951,6 +1094,7 @@ document.addEventListener('DOMContentLoaded', async function() {
           .wecom-folder-stack { width: 92%; height: 230px; }
           .wecom-folder-stack img { height: 210px; }
           .wecom-dialog { width: 100vw; max-height: none; border-radius: 0; }
+          .aiesec-dialog { max-height: 100vh; overflow: hidden; }
           .wecom-dialog-shell { padding: 18px 14px; }
           .wecom-panel-heading, .wecom-assets-heading { align-items: flex-start; }
           .wecom-drive-link { max-width: 104px; text-align: right; white-space: normal; }
@@ -997,7 +1141,11 @@ document.addEventListener('DOMContentLoaded', async function() {
         .logo-lightbox img { display: block; width: 100%; height: min(70vh, 720px); object-fit: contain; }
         .logo-lightbox p { margin: 16px 0 0; font-family: Archivo, sans-serif; font-size: 1.15rem; font-weight: 760; letter-spacing: -.04em; }
         .logo-lightbox-close { position: absolute; top: 14px; right: 14px; width: 40px; height: 40px; border: 0; border-radius: 50%; background: #141416; color: #f4f1ea; font-size: 1.4rem; line-height: 1; cursor: pointer; }
-        .print-zoom { position: fixed; inset: 0; z-index: 80; display: grid; grid-template-rows: auto minmax(0, 1fr); justify-items: center; padding: 14px 20px 20px; background: rgba(5,5,6,.92); }
+        .print-zoom { position: fixed; inset: 0; z-index: 80; grid-template-rows: auto minmax(0, 1fr); justify-items: center; padding: 14px 20px 20px; background: rgba(5,5,6,.92); }
+        dialog.print-zoom { width: 100vw; height: 100vh; max-width: none; max-height: none; margin: 0; border: 0; }
+        dialog.print-zoom::backdrop { background: transparent; }
+        dialog.print-zoom:not([open]) { display: none !important; }
+        dialog.print-zoom[open], div.print-zoom:not([hidden]) { display: grid; }
         .print-zoom[hidden] { display: none !important; }
         .print-zoom-bar { display: flex; width: min(100%, 1100px); align-items: center; justify-content: space-between; gap: 16px; padding: 14px 18px; color: #f4f1ea; }
         .print-zoom-bar p { margin: 0; font-family: Archivo, sans-serif; font-size: 1rem; font-weight: 680; letter-spacing: -.03em; }
@@ -1066,226 +1214,79 @@ document.addEventListener('DOMContentLoaded', async function() {
           <button class="wecom-dialog-close" type="button" aria-label="Close WeCom&Co folder">×</button>
         </header>
         <div class="wecom-gallery-body">
-          <section class="wecom-carousel-panel" aria-label="Instagram carousel">
-            <div class="wecom-panel-heading">
-              <div><h3>Instagram carousel</h3><p>Swipe through the five-slide post</p></div>
-              <a class="wecom-drive-link" href="https://drive.google.com/drive/folders/16nI4aFm85KGjhb9zOd5XA8xbKyC2SacF?usp=drive_link" target="_blank" rel="noopener noreferrer">Original folder ↗</a>
-            </div>
-            <div class="wecom-carousel-stage">
-              <button class="wecom-carousel-nav wecom-carousel-prev" type="button" aria-label="Previous carousel slide">‹</button>
-              <img class="wecom-carousel-image" alt="">
-              <button class="wecom-carousel-nav wecom-carousel-next" type="button" aria-label="Next carousel slide">›</button>
-            </div>
-            <div class="wecom-carousel-footer">
-              <div class="wecom-carousel-dots" aria-label="Choose carousel slide"></div>
-              <span class="wecom-carousel-count" aria-live="polite"></span>
-            </div>
-          </section>
-          <section aria-labelledby="wecom-assets-title">
-            <div class="wecom-assets-heading"><h3 id="wecom-assets-title">More from the folder</h3><span>08 pieces</span></div>
-            <div class="wecom-assets-grid"></div>
-          </section>
+          <div class="wecom-assets-grid"></div>
         </div>`;
-      const postViewer = document.createElement('section');
-      postViewer.className = 'wecom-post-viewer';
-      postViewer.hidden = true;
-      postViewer.setAttribute('aria-label', 'Post viewer');
-      postViewer.innerHTML = `
-        <div class="wecom-post-viewer-top">
-          <button class="wecom-back-folder" type="button"><span aria-hidden="true">←</span> Back to folder</button>
-          <h3 class="wecom-post-viewer-title"></h3>
-        </div>
-        <div class="wecom-post-stage">
-          <button class="wecom-carousel-nav wecom-post-nav wecom-post-prev" type="button" aria-label="Previous post">‹</button>
-          <div class="wecom-post-media"></div>
-          <button class="wecom-carousel-nav wecom-post-nav wecom-post-next" type="button" aria-label="Next post">›</button>
-        </div>
-        <div class="wecom-post-footer">
-          <div class="wecom-carousel-dots" aria-label="Choose a post"></div>
-          <span class="wecom-carousel-count" aria-live="polite"></span>
-          <a class="wecom-open-drive" target="_blank" rel="noopener noreferrer" hidden>Open original ↗</a>
-        </div>`;
-      shell.append(postViewer);
       dialog.append(shell);
       document.body.append(dialog);
-      const galleryBody = dialog.querySelector('.wecom-gallery-body');
-
-      const slideImage = dialog.querySelector('.wecom-carousel-image');
-      const slideCount = dialog.querySelector('.wecom-carousel-count');
-      const previousSlide = dialog.querySelector('.wecom-carousel-prev');
-      const nextSlide = dialog.querySelector('.wecom-carousel-next');
-      const slideDots = dialog.querySelector('.wecom-carousel-dots');
-      const carouselStage = dialog.querySelector('.wecom-carousel-stage');
-      let activeSlide = 0;
-      let pointerStartX = null;
-      const renderSlide = () => {
-        const slide = carouselSlides[activeSlide];
-        slideImage.src = slide.src;
-        slideImage.alt = slide.alt;
-        slideImage.classList.remove('is-swapping');
-        void slideImage.offsetWidth;
-        slideImage.classList.add('is-swapping');
-        slideCount.textContent = `${String(activeSlide + 1).padStart(2, '0')} / ${String(carouselSlides.length).padStart(2, '0')}`;
-        previousSlide.disabled = activeSlide === 0;
-        nextSlide.disabled = activeSlide === carouselSlides.length - 1;
-        Array.from(slideDots.children).forEach((dot, index) => {
-          dot.setAttribute('aria-pressed', index === activeSlide ? 'true' : 'false');
-        });
-      };
-      carouselSlides.forEach((slide, index) => {
-        const dot = document.createElement('button');
-        dot.className = 'wecom-carousel-dot';
-        dot.type = 'button';
-        dot.setAttribute('aria-label', `Show carousel slide ${index + 1}`);
-        dot.setAttribute('aria-pressed', 'false');
-        dot.addEventListener('click', () => {
-          activeSlide = index;
-          renderSlide();
-        });
-        slideDots.append(dot);
-      });
-      previousSlide.addEventListener('click', () => {
-        activeSlide = Math.max(0, activeSlide - 1);
-        renderSlide();
-      });
-      nextSlide.addEventListener('click', () => {
-        activeSlide = Math.min(carouselSlides.length - 1, activeSlide + 1);
-        renderSlide();
-      });
-      carouselStage.addEventListener('pointerdown', (event) => {
-        if (event.pointerType === 'mouse' || event.target.closest('button')) return;
-        pointerStartX = event.clientX;
-        carouselStage.setPointerCapture(event.pointerId);
-      });
-      carouselStage.addEventListener('pointerup', (event) => {
-        if (pointerStartX === null) return;
-        const distance = event.clientX - pointerStartX;
-        pointerStartX = null;
-        if (Math.abs(distance) < 40) return;
-        activeSlide = Math.max(0, Math.min(carouselSlides.length - 1, activeSlide + (distance < 0 ? 1 : -1)));
-        renderSlide();
-      });
-      carouselStage.addEventListener('pointercancel', () => { pointerStartX = null; });
-      renderSlide();
-
       const assetsGrid = dialog.querySelector('.wecom-assets-grid');
-      const postTitle = postViewer.querySelector('.wecom-post-viewer-title');
-      const postMedia = postViewer.querySelector('.wecom-post-media');
-      const postCount = postViewer.querySelector('.wecom-post-footer .wecom-carousel-count');
-      const postDots = postViewer.querySelector('.wecom-post-footer .wecom-carousel-dots');
-      const previousPost = postViewer.querySelector('.wecom-post-prev');
-      const nextPost = postViewer.querySelector('.wecom-post-next');
-      const postStage = postViewer.querySelector('.wecom-post-stage');
-      const openDrive = postViewer.querySelector('.wecom-open-drive');
-      let activePost = 0;
-      let lastPostTrigger = null;
-      let postPointerStartX = null;
-      const renderPost = () => {
-        const asset = campaignAssets[activePost];
-        postTitle.textContent = asset.title;
-        postCount.textContent = `${String(activePost + 1).padStart(2, '0')} / ${String(campaignAssets.length).padStart(2, '0')}`;
-        previousPost.disabled = activePost === 0;
-        nextPost.disabled = activePost === campaignAssets.length - 1;
-        Array.from(postDots.children).forEach((dot, index) => {
-          dot.setAttribute('aria-pressed', index === activePost ? 'true' : 'false');
-        });
-        postMedia.replaceChildren();
-        if (asset.type === 'Video') {
-          const frame = document.createElement('iframe');
-          frame.src = `https://drive.google.com/file/d/${asset.driveId}/preview`;
-          frame.title = asset.alt;
-          frame.allow = 'autoplay; encrypted-media; fullscreen; picture-in-picture';
-          frame.allowFullscreen = true;
-          postMedia.append(frame);
-          openDrive.href = `https://drive.google.com/file/d/${asset.driveId}/view`;
-          openDrive.hidden = false;
-        } else {
-          const image = document.createElement('img');
-          image.src = asset.src;
-          image.alt = asset.alt;
-          image.className = 'is-swapping';
-          postMedia.append(image);
-          openDrive.hidden = true;
-          openDrive.removeAttribute('href');
-        }
+      const carouselPiece = {
+        title: 'Instagram carousel',
+        slides: carouselSlides.map((slide) => slide.src),
+        slideTitles: carouselSlides.map((_, index) => `Slide ${String(index + 1).padStart(2, '0')}`)
       };
-      const showPost = (index, trigger) => {
-        activePost = Math.max(0, Math.min(index, campaignAssets.length - 1));
-        lastPostTrigger = trigger;
-        galleryBody.hidden = true;
-        postViewer.hidden = false;
-        renderPost();
-        postViewer.querySelector('.wecom-back-folder').focus();
+      const folderPieces = [
+        ...carouselSlides.map((slide, index) => ({
+          title: `Slide ${String(index + 1).padStart(2, '0')}`,
+          zoomTitle: 'Instagram carousel',
+          type: 'Carousel',
+          src: slide.src,
+          alt: slide.alt,
+          slides: carouselPiece.slides,
+          slideTitles: carouselPiece.slideTitles,
+          start: index
+        })),
+        ...campaignAssets
+      ];
+      const folderVideo = document.createElement('dialog');
+      folderVideo.className = 'print-zoom wecom-video-zoom';
+      folderVideo.innerHTML = `
+        <div class="print-zoom-bar">
+          <p></p>
+          <div class="print-zoom-tools">
+            <button type="button" data-zoom="close" aria-label="Close">×</button>
+          </div>
+        </div>
+        <div class="print-zoom-stage"><video controls playsinline></video></div>`;
+      const folderVideoEl = folderVideo.querySelector('video');
+      const openFolderVideo = (asset) => {
+        folderVideo.querySelector('p').textContent = asset.title;
+        folderVideoEl.src = asset.src;
+        if (!folderVideo.open) folderVideo.showModal();
+        folderVideoEl.play().catch(() => {});
       };
-      const showFolderContents = (restoreFocus = true) => {
-        postMedia.replaceChildren();
-        openDrive.hidden = true;
-        postViewer.hidden = true;
-        galleryBody.hidden = false;
-        if (restoreFocus && lastPostTrigger && lastPostTrigger.isConnected) lastPostTrigger.focus();
-        lastPostTrigger = null;
-      };
-      campaignAssets.forEach((asset, index) => {
-        const dot = document.createElement('button');
-        dot.className = 'wecom-carousel-dot';
-        dot.type = 'button';
-        dot.setAttribute('aria-label', `Show ${asset.title}`);
-        dot.setAttribute('aria-pressed', 'false');
-        dot.addEventListener('click', () => {
-          activePost = index;
-          renderPost();
-        });
-        postDots.append(dot);
+      folderVideo.addEventListener('close', () => {
+        folderVideoEl.pause();
+        folderVideoEl.removeAttribute('src');
+        folderVideoEl.load();
       });
-      previousPost.addEventListener('click', () => {
-        activePost = Math.max(0, activePost - 1);
-        renderPost();
+      folderVideo.querySelector('[data-zoom="close"]').addEventListener('click', () => folderVideo.close());
+      folderVideo.addEventListener('click', (event) => {
+        if (event.target.closest('video, button')) return;
+        folderVideo.close();
       });
-      nextPost.addEventListener('click', () => {
-        activePost = Math.min(campaignAssets.length - 1, activePost + 1);
-        renderPost();
-      });
-      postViewer.querySelector('.wecom-back-folder').addEventListener('click', showFolderContents);
-      postStage.addEventListener('pointerdown', (event) => {
-        if (event.pointerType === 'mouse' || event.target.closest('button')) return;
-        postPointerStartX = event.clientX;
-        postStage.setPointerCapture(event.pointerId);
-      });
-      postStage.addEventListener('pointerup', (event) => {
-        if (postPointerStartX === null) return;
-        const distance = event.clientX - postPointerStartX;
-        postPointerStartX = null;
-        if (Math.abs(distance) < 40) return;
-        activePost = Math.max(0, Math.min(campaignAssets.length - 1, activePost + (distance < 0 ? 1 : -1)));
-        renderPost();
-      });
-      postStage.addEventListener('pointercancel', () => { postPointerStartX = null; });
-      postViewer.addEventListener('keydown', (event) => {
-        if (event.key === 'ArrowLeft') {
-          event.preventDefault();
-          previousPost.click();
-        } else if (event.key === 'ArrowRight') {
-          event.preventDefault();
-          nextPost.click();
-        }
-      });
-      dialog.addEventListener('keydown', (event) => {
-        if (event.key !== 'Escape') return;
-        event.preventDefault();
-        closeFolder();
-      });
-      campaignAssets.forEach((asset, index) => {
+      folderVideo.addEventListener('wheel', (event) => event.preventDefault(), { passive: false });
+      document.body.append(folderVideo);
+      const addFolderTile = (asset) => {
         const tile = document.createElement('article');
         tile.className = 'wecom-asset-tile';
         const visual = document.createElement('div');
         visual.className = 'wecom-asset-visual';
         if (asset.type === 'Video') {
-          const frame = document.createElement('iframe');
-          frame.src = `https://drive.google.com/file/d/${asset.driveId}/preview`;
-          frame.title = asset.alt;
-          frame.loading = 'lazy';
-          frame.allow = 'autoplay; encrypted-media; fullscreen; picture-in-picture';
-          visual.append(frame);
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'wecom-video-open';
+          button.setAttribute('aria-label', `Play ${asset.title}`);
+          const video = document.createElement('video');
+          video.src = `${asset.src}#t=0.4`;
+          video.muted = true;
+          video.playsInline = true;
+          video.preload = 'metadata';
+          const play = document.createElement('span');
+          play.className = 'wecom-video-play';
+          play.setAttribute('aria-hidden', 'true');
+          button.append(video, play);
+          button.addEventListener('click', () => openFolderVideo(asset));
+          visual.append(button);
         } else {
           const image = document.createElement('img');
           image.src = asset.src;
@@ -1295,11 +1296,11 @@ document.addEventListener('DOMContentLoaded', async function() {
           image.tabIndex = 0;
           image.setAttribute('role', 'button');
           image.setAttribute('aria-label', `Open ${asset.title}`);
-          image.addEventListener('click', () => showPost(index, image));
+          image.addEventListener('click', () => openPrintPiece(asset, asset.start || 0));
           image.addEventListener('keydown', (event) => {
             if (event.key !== 'Enter' && event.key !== ' ') return;
             event.preventDefault();
-            showPost(index, image);
+            openPrintPiece(asset, asset.start || 0);
           });
           visual.append(image);
         }
@@ -1309,24 +1310,50 @@ document.addEventListener('DOMContentLoaded', async function() {
         title.textContent = asset.title;
         const type = document.createElement('span');
         type.textContent = asset.type;
-        const view = document.createElement('button');
-        view.className = 'wecom-asset-view';
-        view.type = 'button';
-        view.setAttribute('aria-label', `Open ${asset.title}`);
-        view.textContent = 'View ↗';
-        view.addEventListener('click', () => showPost(index, view));
-        caption.append(title, type, view);
+        caption.append(title, type);
         tile.append(visual, caption);
         assetsGrid.append(tile);
-      });
-
+      };
+      folderPieces.forEach(addFolderTile);
+      let pageLocked = false;
+      let folderScrollY = 0;
+      const lockPage = () => {
+        if (pageLocked) return;
+        pageLocked = true;
+        folderScrollY = window.scrollY;
+        document.body.style.position = 'fixed';
+        document.body.style.top = `-${folderScrollY}px`;
+        document.body.style.left = '0';
+        document.body.style.right = '0';
+        document.body.style.width = '100%';
+      };
+      const unlockPage = () => {
+        if (document.querySelector('dialog.wecom-dialog[open]')) return;
+        if (!pageLocked) return;
+        pageLocked = false;
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.left = '';
+        document.body.style.right = '';
+        document.body.style.width = '';
+        window.scrollTo(0, folderScrollY);
+      };
       const openFolder = () => {
-        if (!dialog.open) dialog.showModal();
+        if (dialog.open) return;
+        dialog.showModal();
+        lockPage();
       };
       const closeFolder = () => {
-        showFolderContents(false);
+        if (folderVideo.open) folderVideo.close();
         if (dialog.open) dialog.close();
       };
+      dialog.addEventListener('close', unlockPage);
+      dialog.addEventListener('keydown', (event) => {
+        if (event.key !== 'Escape') return;
+        if (document.querySelector('dialog.print-zoom[open]')) return;
+        event.preventDefault();
+        closeFolder();
+      });
       dialog.querySelector('.wecom-dialog-close').addEventListener('click', closeFolder);
       dialog.addEventListener('click', (event) => {
         if (event.target === dialog) closeFolder();
@@ -1381,8 +1408,11 @@ document.addEventListener('DOMContentLoaded', async function() {
         aiesecAssetsGrid.append(tile);
       });
       const openAiesecFolder = () => {
-        if (!aiesecDialog.open) aiesecDialog.showModal();
+        if (aiesecDialog.open) return;
+        aiesecDialog.showModal();
+        lockPage();
       };
+      aiesecDialog.addEventListener('close', unlockPage);
       aiesecDialog.querySelector('.wecom-dialog-close').addEventListener('click', () => aiesecDialog.close());
       aiesecDialog.addEventListener('keydown', (event) => {
         if (event.key !== 'Escape') return;
@@ -1392,11 +1422,23 @@ document.addEventListener('DOMContentLoaded', async function() {
       aiesecDialog.addEventListener('click', (event) => {
         if (event.target === aiesecDialog) aiesecDialog.close();
       });
+      const blockAiesecScroll = (event) => {
+        if (!aiesecDialog.open) return;
+        if (event.target instanceof Element && event.target.closest('.print-zoom')) return;
+        event.preventDefault();
+      };
+      document.addEventListener('wheel', blockAiesecScroll, { passive: false, capture: true });
+      document.addEventListener('touchmove', blockAiesecScroll, { passive: false, capture: true });
+      document.addEventListener('keydown', (event) => {
+        if (!aiesecDialog.open) return;
+        if (!['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End', ' '].includes(event.key)) return;
+        if (event.target instanceof Element && event.target.closest('.print-zoom')) return;
+        event.preventDefault();
+      }, true);
       document.body.append(aiesecDialog);
 
-      const printPiece = document.createElement('div');
+      const printPiece = document.createElement('dialog');
       printPiece.className = 'print-zoom';
-      printPiece.hidden = true;
       printPiece.innerHTML = `
         <div class="print-zoom-bar">
           <p></p>
@@ -1442,7 +1484,7 @@ document.addEventListener('DOMContentLoaded', async function() {
           if (action.dataset.zoom === 'in') setPrintZoom(printZoom + 0.25);
           if (action.dataset.zoom === 'out') setPrintZoom(printZoom - 0.25);
           if (action.dataset.zoom === 'reset') setPrintZoom(1);
-          if (action.dataset.zoom === 'close') printPiece.hidden = true;
+          if (action.dataset.zoom === 'close') printPiece.close();
           return;
         }
         const slideAction = event.target.closest('[data-print-slide]');
@@ -1450,7 +1492,12 @@ document.addEventListener('DOMContentLoaded', async function() {
           showPrintSlide(activePrintSlide + (slideAction.dataset.printSlide === 'next' ? 1 : -1));
         }
         const dot = event.target.closest('[data-print-dot]');
-        if (dot && activePrintSlides) showPrintSlide(Number(dot.dataset.printDot));
+        if (dot && activePrintSlides) {
+          showPrintSlide(Number(dot.dataset.printDot));
+          return;
+        }
+        if (event.target.closest('img, video, button')) return;
+        printPiece.close();
       });
       const showPrintSlide = (index) => {
         if (!activePrintSlides) return;
@@ -1507,12 +1554,12 @@ document.addEventListener('DOMContentLoaded', async function() {
         if (event.key === 'ArrowLeft') showPrintSlide(activePrintSlide - 1);
         if (event.key === 'ArrowRight') showPrintSlide(activePrintSlide + 1);
       });
-      const openPrintPiece = (asset) => {
+      const openPrintPiece = (asset, startIndex = 0) => {
         activePrintSlides = Array.isArray(asset.slides)
           ? asset.slides.map((src, index) => ({ src, alt: asset.slideTitles[index] }))
           : null;
         activePrintSlide = 0;
-        printPiece.dataset.title = asset.title;
+        printPiece.dataset.title = asset.zoomTitle || asset.title;
         if (activePrintSlides) {
           printPiece.querySelectorAll('.print-slide-nav').forEach((button) => { button.hidden = false; });
           const dots = printPiece.querySelector('.print-carousel-dots');
@@ -1524,16 +1571,16 @@ document.addEventListener('DOMContentLoaded', async function() {
             dot.setAttribute('aria-label', `Show ${slide.alt}`);
             return dot;
           }));
-          showPrintSlide(0);
+          showPrintSlide(startIndex || 0);
         } else {
           printPiece.querySelectorAll('.print-slide-nav').forEach((button) => { button.hidden = true; });
           printPiece.querySelector('.print-carousel-dots').replaceChildren();
           printZoomImage.src = asset.src;
           printZoomImage.alt = asset.title;
           printPiece.querySelector('.print-zoom-bar p').textContent = asset.title;
-          setPrintZoom(1);
         }
-        printPiece.hidden = false;
+        setPrintZoom(1);
+        if (!printPiece.open) printPiece.showModal();
       };
 
       const bookLightbox = document.createElement('div');
@@ -1678,13 +1725,17 @@ document.addEventListener('DOMContentLoaded', async function() {
       bookNext.addEventListener('click', () => turnBook(1));
       bookLightbox.querySelector('.book-close').addEventListener('click', () => { bookLightbox.hidden = true; });
       bookLightbox.addEventListener('click', (event) => {
-        if (event.target === bookLightbox) bookLightbox.hidden = true;
+        if (event.target.closest('.book, .book-arrow, .book-close, button')) return;
+        bookLightbox.hidden = true;
       });
       bookLightbox.addEventListener('wheel', (event) => {
         event.preventDefault();
       }, { passive: false });
       document.addEventListener('keydown', (event) => {
-        if (!printPiece.hidden && event.key === 'Escape') printPiece.hidden = true;
+        if (printPiece.open && event.key === 'Escape') {
+          event.preventDefault();
+          printPiece.close();
+        }
         if (bookLightbox.hidden) return;
         if (event.key === 'Escape') bookLightbox.hidden = true;
         if (event.key === 'ArrowLeft') turnBook(-1);
@@ -1852,8 +1903,12 @@ document.addEventListener('DOMContentLoaded', async function() {
 
         const placeholders = new Set(['Culture Drop', 'Summer Sessions', 'Launch Day', 'Today / Tomorrow']);
         projects.querySelectorAll('.project').forEach((project) => {
+          if (project.classList.contains('wecom-folder-project') || project.classList.contains('aiesec-folder-project')) return;
           const title = project.querySelector('.project-details h3')?.textContent.trim();
-          if (placeholders.has(title)) project.classList.add('wecom-placeholder');
+          const art = project.querySelector('.cover .art b')?.textContent.trim();
+          if (placeholders.has(title) || ['CULTURE', 'SUMMER', 'LAUNCH', 'TODAY'].includes(art)) {
+            project.classList.add('wecom-placeholder');
+          }
         });
 
         const updatePostsCount = () => {
@@ -1930,11 +1985,15 @@ document.addEventListener('DOMContentLoaded', async function() {
           const stage = logoDialog.querySelector('.print-zoom-stage');
           logoDialog.addEventListener('click', (event) => {
             const action = event.target.closest('[data-zoom]');
-            if (!action) return;
-            if (action.dataset.zoom === 'in') setLogoZoom(logoZoom + 0.25);
-            if (action.dataset.zoom === 'out') setLogoZoom(logoZoom - 0.25);
-            if (action.dataset.zoom === 'reset') setLogoZoom(1);
-            if (action.dataset.zoom === 'close') logoDialog.hidden = true;
+            if (action) {
+              if (action.dataset.zoom === 'in') setLogoZoom(logoZoom + 0.25);
+              if (action.dataset.zoom === 'out') setLogoZoom(logoZoom - 0.25);
+              if (action.dataset.zoom === 'reset') setLogoZoom(1);
+              if (action.dataset.zoom === 'close') logoDialog.hidden = true;
+              return;
+            }
+            if (event.target.closest('img, button')) return;
+            logoDialog.hidden = true;
           });
           stage.addEventListener('wheel', (event) => {
             event.preventDefault();
@@ -2005,7 +2064,8 @@ document.addEventListener('DOMContentLoaded', async function() {
           if (isLogo) {
             const title = logoTitlesByDriveId[id];
             const project = slot.closest('.project');
-            if (title) {
+            const isLogosSection = slot.closest('.work-section')?.querySelector('h2')?.textContent.trim() === 'Logos';
+            if (title && isLogosSection) {
               slot.dataset.driveTitle = title;
               const heading = project?.querySelector('.project-details h3');
               if (heading) heading.textContent = title;
@@ -2031,20 +2091,93 @@ document.addEventListener('DOMContentLoaded', async function() {
             slot.dataset.mode = 'logo';
             return;
           }
-          const current = slot.querySelector('iframe');
-          if (current && current.dataset.filled === id) return;
-          const frame = document.createElement('iframe');
-          frame.dataset.filled = id;
-          frame.className = 'logo-drive-preview';
-          frame.src = `https://drive.google.com/file/d/${id}/preview`;
-          frame.title = slot.dataset.driveTitle || 'Project preview';
-          frame.loading = 'lazy';
-          frame.allow = 'autoplay; encrypted-media; fullscreen; picture-in-picture';
-          slot.replaceChildren(frame);
+          const portraitIds = new Set(['13yfAIfe1umRCO--dJpcwR3D_CFW9F9SP', '1phOTycL2H7pGPAMe1ledUm7BCWvJJi6e']);
+          const portrait = portraitIds.has(id);
+          const project = slot.closest('.project');
+          const cover = slot.closest('.cover');
+          if (portrait && project && cover) {
+            project.classList.remove('wide');
+            project.classList.add('narrow');
+            cover.classList.remove('landscape');
+            cover.classList.add('phone');
+          }
+          const trailerPosters = { '1phOTycL2H7pGPAMe1ledUm7BCWvJJi6e': 'assets/teaser-cover.png' };
+          if (slot.dataset.filled === id && slot.dataset.mode === 'poster2') return;
+          const poster = document.createElement('img');
+          poster.className = 'logo-drive-preview';
+          poster.alt = slot.dataset.driveTitle || '';
+          poster.decoding = 'async';
+          poster.src = trailerPosters[id] || logoThumb(id);
+          const play = document.createElement('button');
+          play.type = 'button';
+          play.className = 'drive-play';
+          play.setAttribute('aria-label', `Play ${slot.dataset.driveTitle || 'video'}`);
+          play.innerHTML = '<span aria-hidden="true"></span>';
+          play.addEventListener('click', () => openTrailer(id, slot.dataset.driveTitle || 'Video', portrait));
+          slot.replaceChildren(poster, play);
           slot.dataset.filled = id;
-          slot.dataset.mode = 'video';
+          slot.dataset.mode = 'poster2';
         });
       };
+      let trailerBox;
+      const openTrailer = (id, title, portrait) => {
+        if (!trailerBox) {
+          trailerBox = document.createElement('div');
+          trailerBox.className = 'trailer-lightbox';
+          trailerBox.hidden = true;
+          trailerBox.innerHTML = '<button class="trailer-close" type="button" aria-label="Close">×</button><div class="trailer-frame"></div><p></p>';
+          const closeTrailer = () => {
+            const clip = trailerBox.querySelector('video');
+            if (clip) {
+              clip.pause();
+              clip.removeAttribute('src');
+              clip.load();
+            }
+            trailerBox.hidden = true;
+          };
+          trailerBox.querySelector('.trailer-close').addEventListener('click', closeTrailer);
+          trailerBox.addEventListener('click', (event) => {
+            if (event.target.closest('.trailer-frame, .trailer-close, iframe, button')) return;
+            closeTrailer();
+          });
+          document.addEventListener('keydown', (event) => {
+            if (!trailerBox.hidden && event.key === 'Escape') closeTrailer();
+          });
+          document.body.append(trailerBox);
+        }
+        const frame = trailerBox.querySelector('.trailer-frame');
+        frame.classList.toggle('is-portrait', portrait);
+        frame.replaceChildren();
+        const clip = document.createElement('video');
+        clip.src = `/drive/${id}`;
+        clip.controls = true;
+        clip.autoplay = true;
+        clip.playsInline = true;
+        clip.volume = 0.2;
+        clip.title = title;
+        clip.style.cssText = 'width:100%;height:100%;object-fit:contain;background:#000;';
+        frame.append(clip);
+        const pending = clip.play();
+        if (pending && typeof pending.catch === 'function') {
+          pending.catch(() => {
+            clip.muted = true;
+            clip.play().catch(() => {});
+          });
+        }
+        trailerBox.querySelector('p').textContent = title;
+        trailerBox.hidden = false;
+      };
+      document.addEventListener('click', (event) => {
+        const target = event.target;
+        if (!(target instanceof Element) || target.closest('.trailer-lightbox')) return;
+        const cover = target.closest('#work .cover.logo-drive-cover:not(.square)');
+        if (!cover) return;
+        const slot = cover.querySelector('.logo-drive-slot');
+        const id = (slot?.dataset.driveId || '').trim();
+        if (!id) return;
+        event.preventDefault();
+        openTrailer(id, slot.dataset.driveTitle || cover.dataset.driveTitle || 'Video', cover.classList.contains('phone'));
+      }, true);
       let driveMountScheduled = false;
       const scheduleDriveMount = () => {
         if (driveMountScheduled) return;
@@ -2101,7 +2234,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         if (!clip || !showreelOnScreen) return;
         if (soundArmed) {
           clip.muted = false;
-          clip.volume = 0.3;
+          clip.volume = 0.2;
         }
         const pending = clip.play();
         if (pending && typeof pending.catch === 'function') pending.catch(() => {});
@@ -2113,7 +2246,7 @@ document.addEventListener('DOMContentLoaded', async function() {
           const clip = document.querySelector('#top video.showreel');
           if (!clip || !showreelOnScreen) return;
           clip.muted = false;
-          clip.volume = 0.3;
+          clip.volume = 0.2;
           playShowreel(clip);
         };
         document.addEventListener('pointerdown', enable, { once: true, capture: true });
@@ -2136,10 +2269,39 @@ document.addEventListener('DOMContentLoaded', async function() {
         }, { threshold: [0, 0.45, 0.8] });
         visibilityObserver.observe(showreel);
       };
+      const watchHeroFrame = (frame) => {
+        if (!('IntersectionObserver' in window) || observedShowreels.has(frame)) return;
+        observedShowreels.add(frame);
+        const src = frame.dataset.heroSrc || frame.src;
+        const visibilityObserver = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            const visible = entry.isIntersecting && entry.intersectionRatio >= 0.45;
+            const command = (func, args) => frame.contentWindow?.postMessage(JSON.stringify({ event: 'command', func, args }), '*');
+            if ((frame.dataset.heroSrc || '').includes('youtube.com')) {
+              if (!visible) command('pauseVideo', []);
+              else {
+                command('setVolume', [20]);
+                command('unMute', []);
+                command('playVideo', []);
+              }
+              return;
+            }
+            if (!visible) frame.removeAttribute('src');
+            else if (!frame.getAttribute('src')) frame.src = src;
+          });
+        }, { threshold: [0, 0.45, 0.8] });
+        visibilityObserver.observe(frame);
+      };
       const timer = setInterval(() => {
+        const frame = document.querySelector('#top iframe.showreel');
+        if (frame) {
+          watchHeroFrame(frame);
+          clearInterval(timer);
+          return;
+        }
         const showreel = document.querySelector('#top video.showreel');
         tries += 1;
-        if (!showreel || showreel.readyState < 1) {
+        if (!showreel) {
           if (tries > 40) clearInterval(timer);
           return;
         }
@@ -2148,6 +2310,14 @@ document.addEventListener('DOMContentLoaded', async function() {
           showreel.pause();
           showreel.muted = true;
           return;
+        }
+        if (showreel.paused && showreel.currentTime < 0.15) {
+          showreel.volume = 0.2;
+          const pending = showreel.play();
+          if (pending && typeof pending.catch === 'function') pending.catch(() => {
+            showreel.muted = true;
+            showreel.play().catch(() => {});
+          });
         }
         if (tried.has(showreel)) {
           if (!showreel.paused && showreel.currentTime > 0.15) clearInterval(timer);
@@ -2162,7 +2332,7 @@ document.addEventListener('DOMContentLoaded', async function() {
           armSound();
         };
         showreel.muted = false;
-        showreel.volume = 0.3;
+        showreel.volume = 0.2;
         const pending = showreel.play();
         if (pending && typeof pending.then === 'function') pending.then(() => armSound()).catch(playMuted);
         else playMuted();
