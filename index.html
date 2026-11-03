@@ -414,6 +414,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     // createElement so they execute, awaiting onload for src scripts to
     // preserve ordering (React before ReactDOM before Babel before text/babel).
     const doc = new DOMParser().parseFromString(template, 'text/html');
+    const olaTrailer = { title: 'Ola Trailer', src: 'showreel.mp4' };
     const showreelCard = doc.querySelector('#top .grow');
     if (showreelCard) {
       showreelCard.replaceChildren();
@@ -421,7 +422,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
       const video = doc.createElement('video');
       video.className = 'showreel';
-      video.src = 'showreel.mp4';
+      video.src = olaTrailer.src;
       video.controls = true;
       video.loop = false;
       video.autoplay = true;
@@ -432,7 +433,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       video.setAttribute('autoplay', '');
       video.setAttribute('muted', '');
       video.setAttribute('playsinline', '');
-      video.title = 'Showreel';
+      video.title = olaTrailer.title;
       video.style.cssText = 'display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: contain; background: transparent; border: 0; border-radius: 0;';
       showreelCard.append(video);
     }
@@ -503,7 +504,8 @@ document.addEventListener('DOMContentLoaded', async function() {
       style.textContent = `
         .cover.trailer-player::before { display: none; }
         #work .projects.client-browser { display: block; }
-        #work .projects.client-browser > :not(.client-browser-panel) { display: none !important; }
+        #work .projects.client-browser > :not(.client-browser-panel):not([data-ola-trailer]) { display: none !important; }
+        #work .projects.client-browser > [data-ola-trailer] { display: grid !important; }
         .client-browser-panel { display: grid; gap: 18px; }
         .client-switch { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
         .client-tab { display: flex; align-items: center; gap: 12px; min-width: 0; min-height: 72px; padding: 14px 16px; border: 1px solid rgba(245,245,240,.12); border-radius: 16px; background: #141416; color: #F5F5F0; font: inherit; text-align: left; cursor: pointer; transition: border-color .18s ease, background .18s ease, color .18s ease, transform .18s ease; }
@@ -650,7 +652,8 @@ document.addEventListener('DOMContentLoaded', async function() {
           if (count) count.textContent = originalCount;
         };
         restorePlaylists = restore;
-        if (count) count.textContent = `(${String(playlists.length).padStart(2, '0')})`;
+        const sectionItemCount = playlists.length + Number(Boolean(projects.querySelector(':scope > [data-ola-trailer]')));
+        if (count) count.textContent = `(${String(sectionItemCount).padStart(2, '0')})`;
 
         const french = [...document.querySelectorAll('button')].some((button) => button.textContent.trim() === 'FR' && button.getAttribute('aria-pressed') === 'true');
         const isShort = sectionKey === 'Shortform series';
@@ -1790,6 +1793,48 @@ document.addEventListener('DOMContentLoaded', async function() {
         const value = `(${String(visibleProjects).padStart(2, '0')})`;
         if (count && count.textContent !== value) count.textContent = value;
       };
+      const mountOlaTrailer = () => {
+        const section = Array.from(document.querySelectorAll('#work .work-section')).find((item) => {
+          const title = item.querySelector('.work-section-head h2, .work-section-heading h2')?.textContent.trim();
+          return title === 'Trailers & teasers' || title === 'Trailers & Teasers';
+        });
+        const projects = section?.querySelector('.projects');
+        if (!section || !projects || projects.querySelector('[data-ola-trailer]')) return;
+
+        const project = document.createElement('article');
+        project.className = 'project wide';
+        project.dataset.olaTrailer = 'true';
+        const cover = document.createElement('div');
+        cover.className = 'cover landscape';
+        const label = document.createElement('span');
+        label.className = 'work-label';
+        label.textContent = 'TRAILER';
+        const video = document.createElement('video');
+        video.src = olaTrailer.src;
+        video.controls = true;
+        video.playsInline = true;
+        video.preload = 'metadata';
+        video.title = olaTrailer.title;
+        video.style.cssText = 'position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; background: #0b0b0b;';
+        cover.append(label, video);
+        const details = document.createElement('div');
+        details.className = 'project-details';
+        const title = document.createElement('h3');
+        title.textContent = olaTrailer.title;
+        const meta = document.createElement('div');
+        meta.className = 'project-meta';
+        meta.textContent = 'Showreel';
+        details.append(title, meta);
+        project.append(cover, details);
+        projects.append(project);
+
+        const count = section.querySelector('.work-count');
+        const playlistCount = projects.querySelectorAll('.client-tab').length;
+        const sectionItemCount = playlistCount
+          ? playlistCount + Number(Boolean(projects.querySelector('[data-ola-trailer]')))
+          : projects.querySelectorAll(':scope > .project').length;
+        if (count) count.textContent = `(${String(sectionItemCount).padStart(2, '0')})`;
+      };
       const mountWecomFolder = () => {
         const activeFilter = document.querySelector('#work .work-filters .tab[aria-pressed="true"]');
         const activeFilterTitle = activeFilter?.textContent.trim();
@@ -2066,6 +2111,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       const folderObserver = new MutationObserver(() => {
         mountWecomFolder();
         mountPrintsCollection();
+        mountOlaTrailer();
         releaseForeignProjectState();
         scheduleDriveMount();
       });
@@ -2076,12 +2122,14 @@ document.addEventListener('DOMContentLoaded', async function() {
         requestAnimationFrame(() => requestAnimationFrame(() => {
           mountWecomFolder();
           mountPrintsCollection();
+          mountOlaTrailer();
           releaseForeignProjectState();
           mountDriveSlots();
         }));
       }, true);
       mountWecomFolder();
       mountPrintsCollection();
+      mountOlaTrailer();
       scheduleDriveMount();
 
     }
