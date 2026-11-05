@@ -1,0 +1,5 @@
+{
+  "rewrites": [
+    { "source": "/drive/:id", "destination": "/api/drive/:id" }
+  ]
+}
